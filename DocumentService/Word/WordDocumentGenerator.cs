@@ -99,6 +99,7 @@ namespace DocumentService.Word
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
         }
 
