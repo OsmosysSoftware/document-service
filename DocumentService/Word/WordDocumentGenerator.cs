@@ -87,6 +87,12 @@ namespace DocumentService.Word
                 WriteDocument(document, outputFilePath);
                 document.Close();
 
+                /*
+                 * Image Replacement is done after writing the document here,
+                 * because for Text Replacement, NPOI package is being used
+                 * and for Image Replacement, OpeXML package is used.
+                 * Since both the packages have different execution method, so they are handled separately
+                 */
                 // Replace all the image placeholders in the output file
                 ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
             }
@@ -127,6 +133,7 @@ namespace DocumentService.Word
                 {
                     paragraph.ReplaceText(placeholder, textPlaceholders[placeholder]);
                 }
+
                 paragraph.SpacingAfter = 0;
             }
 
@@ -228,6 +235,7 @@ namespace DocumentService.Word
                         foreach (DocumentFormat.OpenXml.Drawing.Blip blip in drawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().ToList())
                         {
                             OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+
                             using (var writer = new BinaryWriter(imagePart.GetStream()))
                             {
                                 writer.Write(File.ReadAllBytes(imagePlaceholders[docProperty.Name]));
