@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System;
+﻿using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentService.Word.Models;
 using NPOI.XWPF.UserModel;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DocumentService.Word
@@ -226,6 +227,9 @@ namespace DocumentService.Word
                 // Get a list of drawings (images)
                 IEnumerable<Drawing> drawings = mainDocumentPart.Document.Descendants<Drawing>().ToList();
 
+                /* 
+                 * FIXME: Look on how we can improve this loop operation.
+                 */
                 foreach (Drawing drawing in drawings)
                 {
                     DocProperties docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
@@ -233,7 +237,9 @@ namespace DocumentService.Word
                     // If drawing / image name is present in imagePlaceholders dictionary, then replace image
                     if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
                     {
-                        foreach (DocumentFormat.OpenXml.Drawing.Blip blip in drawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().ToList())
+                        List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
+
+                        foreach (Blip blip in drawingBlips)
                         {
                             OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
 
