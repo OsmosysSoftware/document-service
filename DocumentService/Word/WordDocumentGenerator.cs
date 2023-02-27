@@ -1,10 +1,14 @@
-﻿using NPOI.XWPF.UserModel;
+﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing.Wordprocessing;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentService.Word.Models;
+using NPOI.XWPF.UserModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System;
 using System.Text.RegularExpressions;
-using DocumentService.Word.Models;
 
 namespace DocumentService.Word
 {
@@ -31,7 +35,7 @@ namespace DocumentService.Word
                     }
                     else if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Image)
                     {
-                        string placeholder = "{" + content.Placeholder + "}";
+                        string placeholder = content.Placeholder;
                         imagePlaceholders.Add(placeholder, content.Content);
                     }
                     else if (content.ParentBody == ParentBody.Table && content.ContentType == ContentType.Text)
@@ -59,7 +63,7 @@ namespace DocumentService.Word
                         }
 
                         // Replace placeholders in paragraph with values
-                        paragraph = ReplacePlaceholdersOnBody(paragraph, textPlaceholders, imagePlaceholders);
+                        paragraph = ReplacePlaceholdersOnBody(paragraph, textPlaceholders);
                     }
                     else if (element.ElementType == BodyElementType.TABLE)
                     {
@@ -83,10 +87,19 @@ namespace DocumentService.Word
                 // Write the document to output file path and close the document
                 WriteDocument(document, outputFilePath);
                 document.Close();
+
+                /*
+                 * Image Replacement is done after writing the document here,
+                 * because for Text Replacement, NPOI package is being used
+                 * and for Image Replacement, OpeXML package is used.
+                 * Since both the packages have different execution method, so they are handled separately
+                 */
+                // Replace all the image placeholders in the output file
+                ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
         }
 
@@ -94,6 +107,7 @@ namespace DocumentService.Word
         {
             FileStream readStream = File.OpenRead(docFilePath);
             XWPFDocument document = new XWPFDocument(readStream);
+            readStream.Close();
             return document;
         }
 
@@ -105,7 +119,7 @@ namespace DocumentService.Word
             }
         }
 
-        private static XWPFParagraph ReplacePlaceholdersOnBody(XWPFParagraph paragraph, Dictionary<string, string> textPlaceholders, Dictionary<string, string> imagePlaceholders)
+        private static XWPFParagraph ReplacePlaceholdersOnBody(XWPFParagraph paragraph, Dictionary<string, string> textPlaceholders)
         {
             // Get a list of all placeholders in the current paragraph
             List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
@@ -115,39 +129,13 @@ namespace DocumentService.Word
             // For each placeholder in paragraph
             foreach (string placeholder in placeholdersTobeReplaced)
             {
-                if (new Regex(@"{[a-zA-Z]+Image}").IsMatch(paragraph.ParagraphText))
+                // Replace text placeholders in paragraph with values
+                if (textPlaceholders.ContainsKey(placeholder))
                 {
-                    // Replace image placeholders in paragraph with Images
-                    paragraph = ReplacePlaceholderWithImage(paragraph, placeholder, imagePlaceholders);
+                    paragraph.ReplaceText(placeholder, textPlaceholders[placeholder]);
                 }
-                else
-                {
-                    // Replace text placeholders in paragraph with values
-                    if (textPlaceholders.ContainsKey(placeholder))
-                    {
-                        paragraph.ReplaceText(placeholder, textPlaceholders[placeholder]);
-                    }
-                    paragraph.SpacingAfter = 0;
-                }
-            }
 
-            return paragraph;
-        }
-
-        private static XWPFParagraph ReplacePlaceholderWithImage(XWPFParagraph paragraph, string placeholder, Dictionary<string, string> imagePlaceholders)
-        {
-            // Remove the image's placeholder
-            paragraph.ReplaceText(placeholder, "");
-
-            // Create a run in the paragraph for the image
-            XWPFRun imageRun = paragraph.CreateRun();
-
-            // Read the image and Add it in placeholder's place
-            using (FileStream imageData = new FileStream(imagePlaceholders[placeholder], FileMode.Open, FileAccess.Read))
-            {
-                var widthEmus = (int)(85.0 * 9525);
-                var heightEmus = (int)(85.0 * 9525);
-                imageRun.AddPicture(imageData, (int)PictureType.PNG, "", widthEmus, heightEmus);
+                paragraph.SpacingAfter = 0;
             }
 
             return paragraph;
@@ -155,18 +143,6 @@ namespace DocumentService.Word
 
         private static XWPFTable ReplacePlaceholderOnTables(XWPFTable table, Dictionary<string, string> tableContentPlaceholders)
         {
-            // Get a count of rows
-            int rowCount = table.NumberOfRows;
-
-            // Return if no rows found
-            if (rowCount <= 0)
-            {
-                return table;
-            }
-
-            // Get a count of columns
-            int columnCount = table.Rows[0].GetTableCells().Count;
-
             // Loop through each cell of the table
             foreach (XWPFTableRow row in table.Rows)
             {
@@ -233,6 +209,53 @@ namespace DocumentService.Word
             }
 
             return table;
+        }
+
+        private static void ReplaceImagePlaceholders(string inputFilePath, string outputFilePath, Dictionary<string, string> imagePlaceholders)
+        {
+            byte[] docBytes = File.ReadAllBytes(inputFilePath);
+
+            // Write document bytes to memory
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Write(docBytes, 0, docBytes.Length);
+
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(memoryStream, true))
+            {
+                MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
+
+                // Get a list of drawings (images)
+                IEnumerable<Drawing> drawings = mainDocumentPart.Document.Descendants<Drawing>().ToList();
+
+                /* 
+                 * FIXME: Look on how we can improve this loop operation.
+                 */
+                foreach (Drawing drawing in drawings)
+                {
+                    DocProperties docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
+
+                    // If drawing / image name is present in imagePlaceholders dictionary, then replace image
+                    if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
+                    {
+                        List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
+
+                        foreach (Blip blip in drawingBlips)
+                        {
+                            OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+
+                            using (var writer = new BinaryWriter(imagePart.GetStream()))
+                            {
+                                writer.Write(File.ReadAllBytes(imagePlaceholders[docProperty.Name]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Overwrite the output file
+            FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            memoryStream.WriteTo(fileStream);
+            fileStream.Close();
+            memoryStream.Close();
         }
     }
 }
