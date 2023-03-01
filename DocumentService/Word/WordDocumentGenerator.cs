@@ -148,25 +148,21 @@ namespace DocumentService.Word
             {
                 foreach (XWPFTableCell cell in row.GetTableCells())
                 {
-                    if (cell.Paragraphs.Count <= 0)
+                    foreach (XWPFParagraph paragraph in cell.Paragraphs)
                     {
-                        continue;
-                    }
+                        // Get a list of all placeholders in the current cell
+                        List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
+                                                                 .Cast<Match>()
+                                                                 .Select(s => s.Groups[0].Value).ToList();
 
-                    XWPFParagraph paragraph = cell.Paragraphs[0];
-
-                    // Get a list of all placeholders in the current cell
-                    List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
-                                                             .Cast<Match>()
-                                                             .Select(s => s.Groups[0].Value).ToList();
-
-                    // For each placeholder in the cell
-                    foreach (string placeholder in placeholdersTobeReplaced)
-                    {
-                        // replace the placeholder with its value
-                        if (tableContentPlaceholders.ContainsKey(placeholder))
+                        // For each placeholder in the cell
+                        foreach (string placeholder in placeholdersTobeReplaced)
                         {
-                            paragraph.ReplaceText(placeholder, tableContentPlaceholders[placeholder]);
+                            // replace the placeholder with its value
+                            if (tableContentPlaceholders.ContainsKey(placeholder))
+                            {
+                                paragraph.ReplaceText(placeholder, tableContentPlaceholders[placeholder]);
+                            }
                         }
                     }
                 }
