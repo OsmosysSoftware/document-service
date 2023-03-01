@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DocumentService.Word
+namespace DocumentService.Word.Models
 {
     public class TableData
     {
