@@ -243,18 +243,9 @@ namespace DocumentService.Word
                             {
                                 string imagePath = imagePlaceholders[docProperty.Name];
 
-                                if (Uri.IsWellFormedUriString(imagePath, UriKind.Absolute))
+                                using (WebClient webClient = new WebClient())
                                 {
-                                    // If the image path is a URL then download data as byte array and write
-                                    using (WebClient webClient = new WebClient())
-                                    {
-                                        writer.Write(webClient.DownloadData(imagePath));
-                                    }
-                                }
-                                else
-                                {
-                                    // Else read all bytes from source file and write
-                                    writer.Write(File.ReadAllBytes(imagePath));
+                                    writer.Write(webClient.DownloadData(imagePath));
                                 }
                             }
                         }
