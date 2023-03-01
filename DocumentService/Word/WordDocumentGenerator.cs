@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace DocumentService.Word
@@ -240,7 +241,21 @@ namespace DocumentService.Word
 
                             using (var writer = new BinaryWriter(imagePart.GetStream()))
                             {
-                                writer.Write(File.ReadAllBytes(imagePlaceholders[docProperty.Name]));
+                                string imagePath = imagePlaceholders[docProperty.Name];
+
+                                if (Uri.IsWellFormedUriString(imagePath, UriKind.Absolute))
+                                {
+                                    // If the image path is a URL then download data as byte array and write
+                                    using (WebClient webClient = new WebClient())
+                                    {
+                                        writer.Write(webClient.DownloadData(imagePath));
+                                    }
+                                }
+                                else
+                                {
+                                    // Else read all bytes from source file and write
+                                    writer.Write(File.ReadAllBytes(imagePath));
+                                }
                             }
                         }
                     }
