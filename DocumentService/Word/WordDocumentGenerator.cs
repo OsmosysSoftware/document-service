@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace DocumentService.Word
@@ -148,25 +149,21 @@ namespace DocumentService.Word
             {
                 foreach (XWPFTableCell cell in row.GetTableCells())
                 {
-                    if (cell.Paragraphs.Count <= 0)
+                    foreach (XWPFParagraph paragraph in cell.Paragraphs)
                     {
-                        continue;
-                    }
+                        // Get a list of all placeholders in the current cell
+                        List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
+                                                                 .Cast<Match>()
+                                                                 .Select(s => s.Groups[0].Value).ToList();
 
-                    XWPFParagraph paragraph = cell.Paragraphs[0];
-
-                    // Get a list of all placeholders in the current cell
-                    List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
-                                                             .Cast<Match>()
-                                                             .Select(s => s.Groups[0].Value).ToList();
-
-                    // For each placeholder in the cell
-                    foreach (string placeholder in placeholdersTobeReplaced)
-                    {
-                        // replace the placeholder with its value
-                        if (tableContentPlaceholders.ContainsKey(placeholder))
+                        // For each placeholder in the cell
+                        foreach (string placeholder in placeholdersTobeReplaced)
                         {
-                            paragraph.ReplaceText(placeholder, tableContentPlaceholders[placeholder]);
+                            // replace the placeholder with its value
+                            if (tableContentPlaceholders.ContainsKey(placeholder))
+                            {
+                                paragraph.ReplaceText(placeholder, tableContentPlaceholders[placeholder]);
+                            }
                         }
                     }
                 }
@@ -244,7 +241,16 @@ namespace DocumentService.Word
 
                             using (var writer = new BinaryWriter(imagePart.GetStream()))
                             {
-                                writer.Write(File.ReadAllBytes(imagePlaceholders[docProperty.Name]));
+                                string imagePath = imagePlaceholders[docProperty.Name];
+
+                                /*
+                                 * WebClient has been deprecated and we need to use HTTPClient.
+                                 * This involves the methods to be asynchronous.
+                                 */
+                                using (WebClient webClient = new WebClient())
+                                {
+                                    writer.Write(webClient.DownloadData(imagePath));
+                                }
                             }
                         }
                     }
