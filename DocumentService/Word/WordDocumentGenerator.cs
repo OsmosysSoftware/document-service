@@ -243,6 +243,10 @@ namespace DocumentService.Word
                             {
                                 string imagePath = imagePlaceholders[docProperty.Name];
 
+                                /*
+                                 * WebClient has been deprecated and we need to use HTTPClient.
+                                 * This involves the methods to be asynchronous.
+                                 */
                                 using (WebClient webClient = new WebClient())
                                 {
                                     writer.Write(webClient.DownloadData(imagePath));
