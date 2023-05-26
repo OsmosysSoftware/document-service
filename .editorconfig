@@ -131,4 +131,5 @@ csharp_style_var_elsewhere = false:error
 
 # CA2249: Consider using 'string.Contains' instead of 'string.IndexOf'
 dotnet_diagnostic.CA2249.severity = error
+
 csharp_space_around_binary_operators = before_and_after
