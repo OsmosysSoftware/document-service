@@ -59,7 +59,7 @@ namespace DocumentService.Word
                 XWPFDocument document = GetXWPFDocument(templateFilePath);
 
                 // For each element in the document
-                foreach (var element in document.BodyElements)
+                foreach (IBodyElement element in document.BodyElements)
                 {
                     if (element.ElementType == BodyElementType.PARAGRAPH)
                     {
@@ -109,7 +109,7 @@ namespace DocumentService.Word
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -276,10 +276,26 @@ namespace DocumentService.Word
                     // If drawing / image name is present in imagePlaceholders dictionary, then replace image
                     if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
                     {
-                        string imagePath = imagePlaceholders[docProperty.Name];
+                        List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
 
-                        // Replace the image with the new image
-                        ReplaceImage(mainDocumentPart, drawing, imagePath);
+                        foreach (Blip blip in drawingBlips)
+                        {
+                            OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+
+                            using (BinaryWriter writer = new BinaryWriter(imagePart.GetStream()))
+                            {
+                                string imagePath = imagePlaceholders[docProperty.Name];
+
+                                /*
+                                 * WebClient has been deprecated and we need to use HTTPClient.
+                                 * This involves the methods to be asynchronous.
+                                 */
+                                using (WebClient webClient = new WebClient())
+                                {
+                                    writer.Write(webClient.DownloadData(imagePath));
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -289,38 +305,13 @@ namespace DocumentService.Word
 
             // Close the memory stream
             memoryStream.Close();
-        }
+        
 
-        /// <summary>
-        /// Replaces an image in the Word document with a new image.
-        /// </summary>
-        /// <param name="mainDocumentPart">The MainDocumentPart of the Word document.</param>
-        /// <param name="drawing">The Drawing element representing the image to replace.</param>
-        /// <param name="newImagePath">The file path of the new image.</param>
-        private static void ReplaceImage(MainDocumentPart mainDocumentPart, Drawing drawing, string newImagePath)
-        {
-            Blip blip = drawing.Descendants<Blip>().FirstOrDefault();
-            if (blip != null)
-            {
-                // Get the image relationship ID
-                string imageRelId = blip.Embed;
-
-                // Remove the existing image part
-                mainDocumentPart.DeletePart(mainDocumentPart.GetPartById(imageRelId));
-
-                // Add the new image part
-                ImagePart newImagePart = mainDocumentPart.AddImagePart(ImagePartType.Jpeg);
-                using (FileStream stream = new FileStream(newImagePath, FileMode.Open))
-                {
-                    newImagePart.FeedData(stream);
-                }
-
-                // Create a new relationship ID for the new image
-                string newImageRelId = mainDocumentPart.GetIdOfPart(newImagePart);
-
-                // Set the new image relationship ID
-                blip.Embed = newImageRelId;
-            }
+        // Overwrite the output file
+        FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        memoryStream.WriteTo(fileStream);
+            fileStream.Close();
+            memoryStream.Close();
         }
     }
 }
