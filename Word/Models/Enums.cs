@@ -1,5 +1,6 @@
 ﻿namespace DocumentService.Word.Models
 {
+
     /// <summary>
     /// Represents the content type of a placeholder in a Word document.
     /// </summary>
@@ -29,6 +30,7 @@
         /// <summary>
         /// The placeholder belongs to a table.
         /// </summary>
+
         Table = 1
     }
 }

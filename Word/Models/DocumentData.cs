@@ -4,6 +4,7 @@ using System.Text;
 
 namespace DocumentService.Word.Models
 {
+
     /// <summary>
     /// Represents the data for a Word document, including content placeholders and table data.
     /// </summary>
@@ -17,6 +18,7 @@ namespace DocumentService.Word.Models
         /// <summary>
         /// Gets or sets the list of table data in the document.
         /// </summary>
+
         public List<TableData> TablesData { get; set; }
     }
 }

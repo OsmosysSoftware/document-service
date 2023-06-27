@@ -1,5 +1,6 @@
 ﻿namespace DocumentService.Word.Models
 {
+
     /// <summary>
     /// Represents the data for a content placeholder in a Word document.
     /// </summary>
@@ -23,6 +24,7 @@
         /// <summary>
         /// Gets or sets the parent body of the placeholder (none or table).
         /// </summary>
+
         public ParentBody ParentBody { get; set; }
     }
 }

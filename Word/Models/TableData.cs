@@ -2,6 +2,7 @@
 
 namespace DocumentService.Word.Models
 {
+
     /// <summary>
     /// Represents the data for a table in a Word document.
     /// </summary>
@@ -16,6 +17,7 @@ namespace DocumentService.Word.Models
         /// Gets or sets the list of dictionaries representing the data for each row in the table.
         /// Each dictionary contains column header-value pairs.
         /// </summary>
+
         public List<Dictionary<string, string>> Data { get; set; }
     }
 }
