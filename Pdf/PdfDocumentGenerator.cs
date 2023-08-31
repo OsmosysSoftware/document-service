@@ -23,11 +23,11 @@ namespace DocumentService.Pdf
             { 
                 if(!File.Exists(templatePath))
                 {
-                    throw new FilePathDoesNotExist("The file path you provided is not Valid"); // Throw error message in case file does not exist.
+                    throw new FilePathDoesNotExist("The file path you provided is not Valid"); 
                 }
-                Console.WriteLine("Going to modify file");
+                
                 string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList);
-                Console.WriteLine("Going to convert file");
+                
                 ConversionCmd(modifiedHtmlFilePath, outputFilePath);
 
             } 
@@ -46,21 +46,28 @@ namespace DocumentService.Pdf
             }
             
 
-            string tempHtmlFilePath = Path.GetTempFileName();
-            File.WriteAllText(tempHtmlFilePath, htmlContent);
-            Console.WriteLine("Going to return modified file");
-            return tempHtmlFilePath;
+            string tempHtmlFilePath = Path.Combine(Path.GetTempPath(), "tmp");
+            string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
+
+            if (!Directory.Exists(tempHtmlFilePath))
+            {
+                Directory.CreateDirectory(tempHtmlFilePath);
+            }
+
+            File.WriteAllText(tempHtmlFile, htmlContent);
+            
+            return tempHtmlFile;
         }
 
         private static void ConversionCmd(string modifiedHtmlFilePath, string outputFilePath)
         {
-            string wkhtmltopdfPath = "cmd.exe";
+            string wkHtmlToPdfPath = "cmd.exe";
 
-            string arguments = $"D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe {modifiedHtmlFilePath} {outputFilePath}";
+            string arguments = $"/C Tools\\wkhtmltopdf.exe {modifiedHtmlFilePath} {outputFilePath}";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = wkhtmltopdfPath, // Path to the executable file of wkhtmlpdfpath.
+                FileName = wkHtmlToPdfPath, // Path to the executable file of wkhtmlpdfpath.
                 Arguments = arguments, // Path to modified template and output location.
                 RedirectStandardOutput = true, // To capture output.
                 RedirectStandardError = true, // To capture error messages.
