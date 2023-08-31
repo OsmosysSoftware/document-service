@@ -15,5 +15,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 </Project>

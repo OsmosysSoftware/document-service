@@ -14,7 +14,7 @@ namespace DocumentService.Pdf
 
         }
     }
-
+     
     public class PdfDocumentGenerator
     {
         public static void generatePdfByTemplate(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
@@ -25,8 +25,9 @@ namespace DocumentService.Pdf
                 {
                     throw new FilePathDoesNotExist("The file path you provided is not Valid"); // Throw error message in case file does not exist.
                 }
-
+                Console.WriteLine("Going to modify file");
                 string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList);
+                Console.WriteLine("Going to convert file");
                 ConversionCmd(modifiedHtmlFilePath, outputFilePath);
 
             } 
@@ -38,24 +39,24 @@ namespace DocumentService.Pdf
 
         private static string ReplaceFileElementsWithMetaData(string templatePath, List<ContentMetaData> metaDataList)
         {
-            string htmlContent = File.ReadAllText(htmlFilePath);
-
-            foreach(ContentMetaData metaData in metaDataList)
+            string htmlContent = File.ReadAllText(templatePath);
+            foreach (ContentMetaData metaData in metaDataList)
             {
                 htmlContent = htmlContent.Replace("{" + metaData.Placeholder + "}", metaData.Content);
             }
+            
 
             string tempHtmlFilePath = Path.GetTempFileName();
             File.WriteAllText(tempHtmlFilePath, htmlContent);
-
+            Console.WriteLine("Going to return modified file");
             return tempHtmlFilePath;
         }
 
         private static void ConversionCmd(string modifiedHtmlFilePath, string outputFilePath)
         {
-            string wkhtmltopdfPath = @"D:\wkhtmltopdf\bin\wkhtmltopdf.exe";
+            string wkhtmltopdfPath = "cmd.exe";
 
-            string arguments = $"\"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            string arguments = $"D:\\wkhtmltopdf\\bin\\wkhtmltopdf.exe {modifiedHtmlFilePath} {outputFilePath}";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -67,12 +68,18 @@ namespace DocumentService.Pdf
                 CreateNoWindow = true
             };
 
+            Console.WriteLine("starting");
+
             using (Process process = new Process())
             {
                 process.StartInfo = psi; // Provide StartInfo with info regarding starting process.
                 process.Start();
-
-                process.WaitForExit(); 
+                Console.WriteLine("Process started");
+                process.WaitForExit();
+                string output = process.StandardOutput.ReadToEnd();
+                string errors = process.StandardError.ReadToEnd();
+                Console.WriteLine("Output: " + output);
+                Console.WriteLine("Errors: " + errors);
             }
 
         }

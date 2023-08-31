@@ -6,6 +6,6 @@ namespace DocumentService.Pdf.Models
 {
     public class DocumentData
     {
-        public List<ContentData> Placeholders { get; set; }
+        public List<ContentMetaData> Placeholders { get; set; }
     }
 }
