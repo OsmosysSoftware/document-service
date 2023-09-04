@@ -43,10 +43,12 @@ namespace DocumentService.Pdf
             foreach (ContentMetaData metaData in metaDataList)
             {
                 htmlContent = htmlContent.Replace("{" + metaData.Placeholder + "}", metaData.Content);
-            }
             
 
-            string tempHtmlFilePath = Path.Combine(Path.GetTempPath(), "tmp");
+            }
+            
+            Console.WriteLine("Current: "+ Directory.GetCurrentDirectory());
+            string tempHtmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
             if (!Directory.Exists(tempHtmlFilePath))
@@ -63,7 +65,7 @@ namespace DocumentService.Pdf
         {
             string wkHtmlToPdfPath = "cmd.exe";
 
-            string arguments = $"/C Tools\\wkhtmltopdf.exe {modifiedHtmlFilePath} {outputFilePath}";
+            string arguments = $"/C Tools\\wkhtmltopdf.exe \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -75,19 +77,21 @@ namespace DocumentService.Pdf
                 CreateNoWindow = true
             };
 
-            Console.WriteLine("starting");
+            
 
             using (Process process = new Process())
             {
                 process.StartInfo = psi; // Provide StartInfo with info regarding starting process.
                 process.Start();
-                Console.WriteLine("Process started");
+                
                 process.WaitForExit();
                 string output = process.StandardOutput.ReadToEnd();
                 string errors = process.StandardError.ReadToEnd();
                 Console.WriteLine("Output: " + output);
                 Console.WriteLine("Errors: " + errors);
             }
+
+            File.Delete(modifiedHtmlFilePath);
 
         }
     }
