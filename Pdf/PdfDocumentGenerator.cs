@@ -47,7 +47,7 @@ namespace DocumentService.Pdf
 
             }
             
-            Console.WriteLine("Current: "+ Directory.GetCurrentDirectory());
+            
             string tempHtmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
@@ -87,8 +87,7 @@ namespace DocumentService.Pdf
                 process.WaitForExit();
                 string output = process.StandardOutput.ReadToEnd();
                 string errors = process.StandardError.ReadToEnd();
-                Console.WriteLine("Output: " + output);
-                Console.WriteLine("Errors: " + errors);
+                
             }
 
             File.Delete(modifiedHtmlFilePath);
