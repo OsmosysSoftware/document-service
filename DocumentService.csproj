@@ -17,10 +17,4 @@
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="Tools\wkhtmltopdf.exe">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
 </Project>
