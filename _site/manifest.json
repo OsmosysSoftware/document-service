@@ -1,0 +1,103 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/user/Desktop/document-service",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ContentData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.ContentData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ContentType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.ContentType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.DocumentData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.DocumentData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ParentBody.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.ParentBody.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.TableData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.TableData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.Models.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.WordDocumentGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.WordDocumentGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/DocumentService.Word.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/10.0.2/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "10.0.2/api/toc.html"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

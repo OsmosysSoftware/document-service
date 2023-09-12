@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -13,8 +13,17 @@ using System.Text.RegularExpressions;
 
 namespace DocumentService.Word
 {
+    /// <summary>
+    /// Provides functionality to generate Word documents based on templates and data.
+    /// </summary>
     public static class WordDocumentGenerator
     {
+        /// <summary>
+        /// Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.
+        /// </summary>
+        /// <param name="templateFilePath">The file path of the template document.</param>
+        /// <param name="documentData">The data to replace the placeholders in the template.</param>
+        /// <param name="outputFilePath">The file path to save the generated document.</param>
         public static void GenerateDocumentByTemplate(string templateFilePath, DocumentData documentData, string outputFilePath)
         {
             try
@@ -50,7 +59,7 @@ namespace DocumentService.Word
                 XWPFDocument document = GetXWPFDocument(templateFilePath);
 
                 // For each element in the document
-                foreach (var element in document.BodyElements)
+                foreach (IBodyElement element in document.BodyElements)
                 {
                     if (element.ElementType == BodyElementType.PARAGRAPH)
                     {
@@ -100,10 +109,15 @@ namespace DocumentService.Word
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
+        /// <summary>
+        /// Retrieves an instance of XWPFDocument from the specified document file path.
+        /// </summary>
+        /// <param name="docFilePath">The file path of the Word document.</param>
+        /// <returns>An instance of XWPFDocument representing the Word document.</returns>
         private static XWPFDocument GetXWPFDocument(string docFilePath)
         {
             FileStream readStream = File.OpenRead(docFilePath);
@@ -112,6 +126,11 @@ namespace DocumentService.Word
             return document;
         }
 
+        /// <summary>
+        /// Writes the XWPFDocument to the specified file path.
+        /// </summary>
+        /// <param name="document">The XWPFDocument to write.</param>
+        /// <param name="filePath">The file path to save the document.</param>
         private static void WriteDocument(XWPFDocument document, string filePath)
         {
             using (FileStream writeStream = File.Create(filePath))
@@ -120,6 +139,12 @@ namespace DocumentService.Word
             }
         }
 
+        /// <summary>
+        /// Replaces the text placeholders in a paragraph with the specified values.
+        /// </summary>
+        /// <param name="paragraph">The XWPFParagraph containing the placeholders.</param>
+        /// <param name="textPlaceholders">The dictionary of text placeholders and their corresponding values.</param>
+        /// <returns>The updated XWPFParagraph.</returns>
         private static XWPFParagraph ReplacePlaceholdersOnBody(XWPFParagraph paragraph, Dictionary<string, string> textPlaceholders)
         {
             // Get a list of all placeholders in the current paragraph
@@ -142,6 +167,12 @@ namespace DocumentService.Word
             return paragraph;
         }
 
+        /// <summary>
+        /// Replaces the text placeholders in a table with the specified values.
+        /// </summary>
+        /// <param name="table">The XWPFTable containing the placeholders.</param>
+        /// <param name="tableContentPlaceholders">The dictionary of table content placeholders and their corresponding values.</param>
+        /// <returns>The updated XWPFTable.</returns>
         private static XWPFTable ReplacePlaceholderOnTables(XWPFTable table, Dictionary<string, string> tableContentPlaceholders)
         {
             // Loop through each cell of the table
@@ -172,6 +203,12 @@ namespace DocumentService.Word
             return table;
         }
 
+        /// <summary>
+        /// Populates a table with the specified data.
+        /// </summary>
+        /// <param name="table">The XWPFTable to populate.</param>
+        /// <param name="tableData">The data to populate the table.</param>
+        /// <returns>The updated XWPFTable.</returns>
         private static XWPFTable PopulateTable(XWPFTable table, TableData tableData)
         {
             // Get the header row
@@ -208,6 +245,12 @@ namespace DocumentService.Word
             return table;
         }
 
+        /// <summary>
+        /// Replaces the image placeholders in the output file with the specified images.
+        /// </summary>
+        /// <param name="inputFilePath">The input file path containing the image placeholders.</param>
+        /// <param name="outputFilePath">The output file path where the updated document will be saved.</param>
+        /// <param name="imagePlaceholders">The dictionary of image placeholders and their corresponding image paths.</param>
         private static void ReplaceImagePlaceholders(string inputFilePath, string outputFilePath, Dictionary<string, string> imagePlaceholders)
         {
             byte[] docBytes = File.ReadAllBytes(inputFilePath);
@@ -239,7 +282,7 @@ namespace DocumentService.Word
                         {
                             OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
 
-                            using (var writer = new BinaryWriter(imagePart.GetStream()))
+                            using (BinaryWriter writer = new BinaryWriter(imagePart.GetStream()))
                             {
                                 string imagePath = imagePlaceholders[docProperty.Name];
 
@@ -257,9 +300,16 @@ namespace DocumentService.Word
                 }
             }
 
-            // Overwrite the output file
-            FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            memoryStream.WriteTo(fileStream);
+            // Save the updated document bytes to the output file path
+            File.WriteAllBytes(outputFilePath, memoryStream.ToArray());
+
+            // Close the memory stream
+            memoryStream.Close();
+        
+
+        // Overwrite the output file
+        FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        memoryStream.WriteTo(fileStream);
             fileStream.Close();
             memoryStream.Close();
         }

@@ -1,0 +1,35 @@
+{
+    "metadata": [{
+        "src": [{
+            "files": [
+                "*.csproj"
+            ],
+            "exclude": ["**/bin/**", "**/obj/**"],
+            "cwd": "."
+        }],
+        "properties": {
+            "TargetFrameworks": "net452"
+        },
+        "dest": "obj/10.0.2/api",
+        "shouldSkipMarkup": true
+    }],
+    "build": {
+        "content": [
+            { "files": ["**/*.yml", "api/*.md"], "src": "obj/10.0.2", "dest": "10.0.2" }
+        ],
+        "globalMetadata": {
+            "_appTitle": "Some Documentation",
+            "_disableContribution": true,
+            "_appFooter": " ",
+            "_navRel": "../toc.html"
+        },
+        "template": [
+            "default",
+            "template"
+        ],
+        "overwrite": [
+            { "files": ["*.md"] }
+        ],
+        "dest": "_site"
+    }
+}
