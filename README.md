@@ -16,9 +16,9 @@ DocumentService is a library with the following functions
 - Converts an HTML document to PDF.
 - Replace placeholders in the document with actual string data.
 
-# Basic Usage
+# Basic usage
 
-## PDF Generation
+## PDF generation
 ```csharp
 List<ContentMetaData> contentList = new List<ContentMetaData>
 {
@@ -32,7 +32,7 @@ List<ContentMetaData> contentList = new List<ContentMetaData>
 PdfDocumentGenerator.GeneratePdfByTemplate("Tools\\index.html", contentList, "Tools\\OutputFile.pdf");
 ```
 
-## Word Document Generation
+## Word document generation
 ```csharp
 string templateFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\Document Service Component\Testing\Document.docx";
 string outputFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\Document Service Component\Testing\Test_Output.docx";
