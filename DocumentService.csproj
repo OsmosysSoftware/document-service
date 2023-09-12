@@ -5,10 +5,6 @@
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <ItemGroup>
-        <Folder Include="Common\" />
-    </ItemGroup>
-
 	<ItemGroup Condition="'$(TargetFramework)' == 'net452'">
 		<PackageReference Include="NPOI" Version="2.4.1" />
 	</ItemGroup>
@@ -19,5 +15,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 </Project>
