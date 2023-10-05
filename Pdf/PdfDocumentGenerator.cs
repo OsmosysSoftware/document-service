@@ -51,7 +51,7 @@ namespace DocumentService.Pdf
         private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
-            string arguments = $"/C {toolFolderAbsolutePath}\\wkhtmltopdf.exe \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            string arguments = $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
