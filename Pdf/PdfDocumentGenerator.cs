@@ -9,7 +9,7 @@ namespace DocumentService.Pdf
 {     
     public class PdfDocumentGenerator
     {
-        public static void GeneratePdfByTemplate(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
+        public static void GeneratePdfByTemplate(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
         {
             try 
             { 
@@ -19,7 +19,7 @@ namespace DocumentService.Pdf
                 }
                 
                 string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList);
-                ConvertHtmlToPdf(modifiedHtmlFilePath, outputFilePath);
+                ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
             } 
             catch(Exception e)
             {
@@ -48,10 +48,10 @@ namespace DocumentService.Pdf
             return tempHtmlFile;
         }
 
-        private static void ConvertHtmlToPdf(string modifiedHtmlFilePath, string outputFilePath)
+        private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
-            string arguments = $"/C Tools\\wkhtmltopdf.exe \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            string arguments = $"/C {toolFolderAbsolutePath}\\wkhtmltopdf.exe \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
