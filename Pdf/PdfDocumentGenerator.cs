@@ -9,7 +9,7 @@ namespace DocumentService.Pdf
 {     
     public class PdfDocumentGenerator
     {
-        public static void GeneratePdfByTemplate(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
+        public static void GeneratePdfByTemplate(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
         {
             try 
             { 
@@ -18,8 +18,8 @@ namespace DocumentService.Pdf
                     throw new Exception("The file path you provided is not Valid"); 
                 }
                 
-                string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList);
-                ConvertHtmlToPdf(modifiedHtmlFilePath, outputFilePath);
+                string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
+                ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
             } 
             catch(Exception e)
             {
@@ -27,7 +27,7 @@ namespace DocumentService.Pdf
             }
         }
 
-        private static string ReplaceFileElementsWithMetaData(string templatePath, List<ContentMetaData> metaDataList)
+        private static string ReplaceFileElementsWithMetaData(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
         {
             string htmlContent = File.ReadAllText(templatePath);
 
@@ -36,7 +36,8 @@ namespace DocumentService.Pdf
                 htmlContent = htmlContent.Replace($"{{{metaData.Placeholder}}}", metaData.Content);
             }
                 
-            string tempHtmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
+            string directoryPath = Path.GetDirectoryName(outputFilePath);
+            string tempHtmlFilePath = Path.Combine(directoryPath, "Temp");
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
             if (!Directory.Exists(tempHtmlFilePath))
@@ -48,10 +49,10 @@ namespace DocumentService.Pdf
             return tempHtmlFile;
         }
 
-        private static void ConvertHtmlToPdf(string modifiedHtmlFilePath, string outputFilePath)
+        private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
-            string arguments = $"/C Tools\\wkhtmltopdf.exe \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            string arguments = $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
