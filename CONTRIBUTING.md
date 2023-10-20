@@ -3,12 +3,12 @@ Welcome to the document-service project! We appreciate your interest in contribu
 please follow the guidelines outlined below:
 
 ## Table of contents
-- [Got a Question or Problem?](#got-a-question-or-problem)
-- [Issues and Bugs](#found-any-issues-and-bugs)
-- [Submitting an Issue](#submission-guidelines)
-- [Feature Requests](#feature-requests)
-- [Coding Rules](#coding-rules)
-- [Commit Message Guidelines](#commit-message-guidelines)
+- [Got a question or problem?](#got-a-question-or-problem)
+- [Issues and bugs](#found-any-issues-and-bugs)
+- [Submitting an issue](#submission-guidelines)
+- [Feature requests](#feature-requests)
+- [Coding rules](#coding-rules)
+- [Commit message guidelines](#commit-message-guidelines)
 
 ## Got a question or problem?
 
@@ -24,7 +24,7 @@ To save time for both you and us, we will close issues related to general suppor
 ## Found any issues and bugs
 
 If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/OsmosysSoftware/document-service/issues/new) 
-to our GitHub Repository. Even better, you can submit a (Pull Request)[https://github.com/OsmosysSoftware/document-service/pulls] with a fix.
+to our GitHub Repository. Even better, you can submit a [pull request](https://github.com/OsmosysSoftware/document-service/pulls) with a fix.
 
 ## Submission guidelines
 
@@ -46,7 +46,7 @@ You can file new issues using our [new issue form](https://github.com/OsmosysSof
 
 Before submitting a Pull Request (PR), please follow these guidelines:
 
-1. Search GitHub [Pull Requests](https://github.com/OsmosysSoftware/document-service/pulls) to ensure there is no open or closed PR 
+1. Search GitHub [pull requests](https://github.com/OsmosysSoftware/document-service/pulls) to ensure there is no open or closed PR 
    related to your submission.
 2. Fork this repository.
 3. Make your changes in a new Git branch.
@@ -96,7 +96,7 @@ to follow when reviewing the project's history. Additionally, we use these commi
 
 Each commit message consists of a **header**, a **body**, and a **footer**. The header follows a specific format that includes 
 a **type**, a **scope**, and a **subject**:
-```shell
+```
 <type>: <subject>
 <BLANK LINE>
 <body>
