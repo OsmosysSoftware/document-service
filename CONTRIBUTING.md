@@ -1,9 +1,8 @@
-# Contributing to document-service
-
+# Contributing to DocumentService
 Welcome to the document-service project! We appreciate your interest in contributing to the project and making it even better. As a contributor, 
 please follow the guidelines outlined below:
 
-## Table of Contents
+## Table of contents
 - [Got a Question or Problem?](#got-a-question-or-problem)
 - [Issues and Bugs](#found-any-issues-and-bugs)
 - [Submitting an Issue](#submission-guidelines)
@@ -11,7 +10,7 @@ please follow the guidelines outlined below:
 - [Coding Rules](#coding-rules)
 - [Commit Message Guidelines](#commit-message-guidelines)
 
-## Got a Question or Problem?
+## Got a question or problem?
 
 **If you have questions or encounter problems, please refrain from opening issues for general support questions**. GitHub issues are primarily for bug 
 reports and feature requests. For general questions and support, consider using [Stack Overflow](https://stackoverflow.com/questions/tagged/document-service) 
@@ -22,14 +21,14 @@ and tag your questions with the `document-service` tag. Here's why Stack Overflo
 
 To save time for both you and us, we will close issues related to general support questions and direct users to Stack Overflow.
 
-## Found any Issues and Bugs
+## Found any issues and bugs
 
 If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/OsmosysSoftware/document-service/issues/new) 
 to our GitHub Repository. Even better, you can submit a (Pull Request)[https://github.com/OsmosysSoftware/document-service/pulls] with a fix.
 
-## Submission Guidelines
+## Submission guidelines
 
-### Submitting an Issue
+### Submitting an issue
 
 Before you submit an issue, please check the issue tracker to see if a similar issue already exists. The discussions there may provide workarounds.
 
@@ -43,7 +42,7 @@ Without a minimal reproduction, we may need to close the issue due to insufficie
 
 You can file new issues using our [new issue form](https://github.com/OsmosysSoftware/document-service/issues/new).
 
-### Submitting a Pull Request (PR)
+### Submitting a pull request (PR)
 
 Before submitting a Pull Request (PR), please follow these guidelines:
 
@@ -51,55 +50,53 @@ Before submitting a Pull Request (PR), please follow these guidelines:
    related to your submission.
 2. Fork this repository.
 3. Make your changes in a new Git branch.
-   ```csharp
+   ```shell
    git checkout -b my-fix-branch main
    ```
-4. Create your patch, **including appropriate test cases**.
-5. Follow our coding rules, which is mentioned below.
-6. Run the full document-service test suite to ensure that all tests pass.
-7. Commit your changes using a descriptive commit message that adheres to our commit message conventions.
-   ```csharp
+4. Follow our coding rules, which is mentioned below.
+5. Commit your changes using a descriptive commit message that adheres to our commit message conventions.
+   ```shell
    git commit -a
    ```
    Note: the optional commit -a command line option will automatically "add" and "rm" edited files.
-8. Push your branch to your GitHub repository.
-   ```csharp
+6. Push your branch to your GitHub repository.
+   ```shell
    git push origin my-fix-branch
    ```
-9. Send a pull request to the `document-service:main`.
+7. Send a pull request to the `document-service:main`.
 
 - <strong style="color:black">•</strong> **If we suggest changes, then:**
   - • Make the required updates.
-  - • Re-run the Osmo-Notify test suites to ensure tests are still passing.
+  - • Ensure that your changes do not break existing functionality or introduce new issues.
   - • Rebase your branch and force push to your GitHub repository. This will update your Pull Request.
 
   That's it! Thank you for your contribution!
 
-## Feature Requests
+## Feature requests
 
 You can request new features by submitting an issue to our GitHub repository. If you intend to implement a new feature, start by proposing it through 
 an issue. Major features require discussion, so please prefix your proposal with [discussion], for example, "[discussion]: your feature idea.
 " Smaller features can be crafted and directly submitted as a Pull Request.
 
-## Coding Rules
+## Coding rules
 
 To ensure consistency throughout the source code, follow these rules as you work on the project:
 
 - All features or bug fixes must be tested by one or more specs (unit-tests).
 
-- We follow the [visual studio coding standards](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions), 
+- We follow the [development coding standards](https://github.com/OsmosysSoftware/dev-standards/blob/main/coding-standards/dotnet.md),
   but wrap all code at 100 characters.
  
-## Commit Message Guidelines
+## Commit message guidelines
 
 In this project, we have specific rules for formatting our Git commit messages. These guidelines result in more readable messages that are easy 
 to follow when reviewing the project's history. Additionally, we use these commit messages to **generate the document-service change log**.
 
-### Commit Message Format
+### Commit message format
 
 Each commit message consists of a **header**, a **body**, and a **footer**. The header follows a specific format that includes 
 a **type**, a **scope**, and a **subject**:
-```csharp
+```shell
 <type>: <subject>
 <BLANK LINE>
 <body>
