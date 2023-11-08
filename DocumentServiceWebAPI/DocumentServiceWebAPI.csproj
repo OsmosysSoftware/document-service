@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DocumentService">
-      <HintPath>..\document-service\bin\Debug\net452\DocumentService.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\DocumentService\DocumentService.csproj" />
   </ItemGroup>
 
 </Project>
