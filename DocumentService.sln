@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService", "DocumentService.csproj", "{975F83D8-E1D1-4945-8191-EA5AAAC8D8AC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentServiceWebAPI", "..\DocumentServiceWebAPI\DocumentServiceWebAPI.csproj", "{DF31E9F6-3D17-4411-A70C-130DA0DD54AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{975F83D8-E1D1-4945-8191-EA5AAAC8D8AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{975F83D8-E1D1-4945-8191-EA5AAAC8D8AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{975F83D8-E1D1-4945-8191-EA5AAAC8D8AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF31E9F6-3D17-4411-A70C-130DA0DD54AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF31E9F6-3D17-4411-A70C-130DA0DD54AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF31E9F6-3D17-4411-A70C-130DA0DD54AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF31E9F6-3D17-4411-A70C-130DA0DD54AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using DocumentServiceWebAPI.Helpers;
+using System.Buffers.Text;
 
 namespace DocumentServiceWebAPI.Controllers
 {
@@ -14,6 +15,7 @@ namespace DocumentServiceWebAPI.Controllers
     [ApiController]
     public class DocumentController : ControllerBase
     {
+        string flag;
         [HttpPost]
         [Route("pdf/GeneratePdfUsingHtml")]
         //public IActionResult GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
@@ -21,8 +23,9 @@ namespace DocumentServiceWebAPI.Controllers
         {
             try
             {
+                flag = "pdf";
                 //decoding: passed encoded base64 string to file and saving it to the temp folder and returning that template file's link
-                string templatePath = Base64Helper.ConvertFileToBase64(request.Base64); 
+                string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, flag); 
 
                 // Generate the PDF using the template
                 string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "convertedPdfs");
@@ -32,14 +35,14 @@ namespace DocumentServiceWebAPI.Controllers
                     Directory.CreateDirectory(outputFolder);
                 }
 
-                string outputFilePath = Path.Combine(outputFolder, "output.pdf");
+                string outputFilePath = Path.Combine(outputFolder, "pdfOutput.pdf");
 
 
                 // passing in main function template to pdf.
-                string toolFolderAbsolutePath = "F:\\c# codes\\DocumentServiceWebAPI\\Tools\\";
+                string toolFolderAbsolutePath = "F:\\Desktop\\document-service\\DocumentServiceWebAPI\\Tools\\wkhtmltopdf.exe";
                 PdfDocumentGenerator.GeneratePdfByTemplate(toolFolderAbsolutePath, templatePath, request.DocumentData.Placeholders, outputFilePath);
-
-                return Ok(new { message = "PDF generated successfully" });
+                string base64 = Base64Helper.ConvertFileToBase64(outputFilePath);
+                return Ok(new { message = "PDF generated successfully" , Base64 = base64});
                 
             }
             catch (Exception ex)
@@ -50,22 +53,31 @@ namespace DocumentServiceWebAPI.Controllers
 
         [HttpPost]
         [Route("word/GenerateWordDocument")]
-        public IActionResult GenerateWord(
-            [FromForm] string templateFilePath,
-            [FromForm] string outputFilePath,
-            [FromForm] List<ContentData> placeholders,
-            [FromForm] List<TableData> tablesData)
+        public IActionResult GenerateWord(WordGenerationRequestDTO request)
         {
             try
             {
+                flag = "word";
+                string templateFilePath = Base64Helper.ConvertBase64ToFile(request.Base64, flag);
                 DocumentService.Word.Models.DocumentData documentData = new()
                 {
-                    Placeholders = placeholders,
-                    TablesData = tablesData
+                    Placeholders = request.DocumentData.Placeholders,
+                    TablesData = request.DocumentData.TablesData
                 };
+                // Generate the doc using the word template
+                string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "convertedDocs");
+                // Creating a directory for the converted output PDFs if it doesn't exist
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
+
+                string outputFilePath = Path.Combine(outputFolder, "wordOutput.docx");
 
                 WordDocumentGenerator.GenerateDocumentByTemplate(templateFilePath, documentData, outputFilePath);
-                return Ok("Word document generated successfully.");
+                string base64 = Base64Helper.ConvertFileToBase64(outputFilePath);
+
+                return Ok(new { message = "Word document generated successfully.", Base64 = base64 });
             }
             catch (Exception ex)
             {

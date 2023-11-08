@@ -37,7 +37,7 @@ namespace DocumentService.Pdf
             }
                 
             string directoryPath = Path.GetDirectoryName(outputFilePath);
-            string tempHtmlFilePath = Path.Combine(directoryPath, "Temp");
+            string tempHtmlFilePath = Path.Combine(directoryPath, "Modified");
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
             if (!Directory.Exists(tempHtmlFilePath))
