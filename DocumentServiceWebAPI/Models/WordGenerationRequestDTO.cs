@@ -6,7 +6,7 @@ namespace DocumentServiceWebAPI.Models;
 public class WordGenerationRequestDTO
 {
     [Required]
-    public string Base64 { get; set; }
+    public string? Base64 { get; set; }
     [Required]
-    public DocumentData DocumentData { get; set; }
+    public DocumentData? DocumentData { get; set; }
 }
