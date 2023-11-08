@@ -1,13 +1,12 @@
 ﻿using DocumentService.Pdf.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DocumentServiceWebAPI.Models
+namespace DocumentServiceWebAPI.Models;
+
+public class PdfGenerationRequestDTO
 {
-    public class PdfGenerationRequestDTO
-    {
-        [Required]
-        public string? Base64 { get; set; }
-        [Required]
-        public DocumentData? DocumentData { get; set; }
-    }
+    [Required]
+    public string? Base64 { get; set; }
+    [Required]
+    public DocumentData? DocumentData { get; set; }
 }

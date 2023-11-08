@@ -5,7 +5,7 @@ public static class Base64Helper
 
     public static string ConvertBase64ToFile(string base64String, string flag) 
     {
-        byte[] data = Convert.FromBase64String(encodedFile);
+        byte[] data = Convert.FromBase64String(base64String);
 
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         int binIndex = baseDirectory.IndexOf("bin");
