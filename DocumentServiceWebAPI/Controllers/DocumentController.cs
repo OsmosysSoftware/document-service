@@ -16,8 +16,13 @@ public class DocumentController : ControllerBase
     {
         try
         {
+            // 1. Build the file path where the temporary HTML file will be stored.
+            // 2. Convert the base64 to file. The file should be stored in the temp directory decided in step #2.
+            // 3. Pass the file to the Document Service for conversion. The file should be stored in the temp location.
+            // 4. Convert the output file to base64 and send it as a response.
+
             //decoding: passed encoded base64 string to file and saving it to the temp folder and returning that template file's link
-            string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, "pdf"); 
+            string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, "pdf");
 
             // Generate the PDF using the template
             string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "convertedPdfs");
