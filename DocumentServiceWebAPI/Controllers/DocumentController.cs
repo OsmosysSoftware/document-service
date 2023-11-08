@@ -10,17 +10,14 @@ namespace DocumentServiceWebAPI.Controllers;
 [ApiController]
 public class DocumentController : ControllerBase
 {
-    string flag;
     [HttpPost]
     [Route("pdf/GeneratePdfUsingHtml")]
-    //public IActionResult GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
     public IActionResult GeneratePdf(PdfGenerationRequestDTO request)
     {
         try
         {
-            flag = "pdf";
             //decoding: passed encoded base64 string to file and saving it to the temp folder and returning that template file's link
-            string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, flag); 
+            string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, "pdf"); 
 
             // Generate the PDF using the template
             string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "convertedPdfs");
@@ -52,8 +49,7 @@ public class DocumentController : ControllerBase
     {
         try
         {
-            flag = "word";
-            string templateFilePath = Base64Helper.ConvertBase64ToFile(request.Base64, flag);
+            string templateFilePath = Base64Helper.ConvertBase64ToFile(request.Base64, "word");
             DocumentService.Word.Models.DocumentData documentData = new()
             {
                 Placeholders = request.DocumentData.Placeholders,
