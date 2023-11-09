@@ -53,18 +53,30 @@ public class WordController : ControllerBase
                 Directory.CreateDirectory(wordOutputFolder);
             }
             //--------------------------------------------------------------------------------------------------------
-            string base64FilePath = Path.Combine(wordInputFolder, "inputWordTemplate.docx");
+            string ext, randomFileName, randomFileNameWithExtension;
+            ext = "docx";
+            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
+            randomFileNameWithExtension = $"{randomFileName}.{ext}";
+
+            string base64FilePath = Path.Combine(wordInputFolder, randomFileNameWithExtension);
 
             string templateFilePath = Base64Helper.ConvertBase64ToFile(request.Base64,base64FilePath );
             //-------------------------------------------------------------------------------------
+           
+
+            //creating random name for output doc
+            
+            
+            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
+            randomFileNameWithExtension = $"{randomFileName}.{ext}";
+            string outputFilePath = Path.Combine(wordOutputFolder, randomFileNameWithExtension);
+
+
             DocumentService.Word.Models.DocumentData documentData = new()
             {
                 Placeholders = request.DocumentData.Placeholders,
                 TablesData = request.DocumentData.TablesData
             };
-          
-
-            string outputFilePath = Path.Combine(wordOutputFolder, "wordOutput.docx");
 
             WordDocumentGenerator.GenerateDocumentByTemplate(templateFilePath, documentData, outputFilePath);
             string base64 = Base64Helper.ConvertFileToBase64(outputFilePath);

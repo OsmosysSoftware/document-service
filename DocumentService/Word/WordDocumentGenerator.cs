@@ -118,6 +118,9 @@ namespace DocumentService.Word
         /// </summary>
         /// <param name="docFilePath">The file path of the Word document.</param>
         /// <returns>An instance of XWPFDocument representing the Word document.</returns>
+        /// 
+
+
         private static XWPFDocument GetXWPFDocument(string docFilePath)
         {
             FileStream readStream = File.OpenRead(docFilePath);
@@ -125,6 +128,8 @@ namespace DocumentService.Word
             readStream.Close();
             return document;
         }
+
+
 
         /// <summary>
         /// Writes the XWPFDocument to the specified file path.

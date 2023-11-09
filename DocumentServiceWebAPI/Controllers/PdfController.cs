@@ -62,15 +62,26 @@ public class PdfController : ControllerBase
                 {
                     Directory.CreateDirectory(pdfFolder);
                 }
-                //----------------------------------------------------------------
+            //----------------------------------------------------------------
 
-              
-                //input base64 decoded file path
-                string base64FilePath = Path.Combine(htmlFolder, "decodedFile.html");
-                //intermediate modified file path
-                //string modifiedFilePath = Path.Combine(htmlFolder, "intermediateFile.html");
-                //output pdf File path
-                string outputFilePath = Path.Combine(pdfFolder, "pdfOutput.pdf");
+
+            //input base64 decoded file path
+            string ext, randomFileName, randomFileNameWithExtension;
+
+            ext = "html";
+            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
+            randomFileNameWithExtension = $"{randomFileName}.{ext}";
+
+            string base64FilePath = Path.Combine(htmlFolder, randomFileNameWithExtension);
+            //intermediate modified file path
+            //string modifiedFilePath = Path.Combine(htmlFolder, "intermediateFile.html");
+
+            //output pdf File path
+            ext = "pdf";
+            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
+            randomFileNameWithExtension = $"{randomFileName}.{ext}";
+
+            string outputFilePath = Path.Combine(pdfFolder, randomFileNameWithExtension);
 
 
 
