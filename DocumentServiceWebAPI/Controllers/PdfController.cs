@@ -1,8 +1,7 @@
-﻿using DocumentServiceWebAPI.Models;
-using DocumentService.Pdf;
-using Microsoft.AspNetCore.Mvc;
+﻿using DocumentService.Pdf;
 using DocumentServiceWebAPI.Helpers;
-using static ICSharpCode.SharpZipLib.Zip.ExtendedUnixData;
+using DocumentServiceWebAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentServiceWebAPI.Controllers;
 
@@ -11,99 +10,68 @@ namespace DocumentServiceWebAPI.Controllers;
 [ApiController]
 public class PdfController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _hostingEnvironment;
+
+    public PdfController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+    {
+        this._configuration = configuration;
+        this._hostingEnvironment = hostingEnvironment;
+    }
+
     [HttpPost]
     [Route("pdf/GeneratePdfUsingHtml")]
     public IActionResult GeneratePdf(PdfGenerationRequestDTO request)
     {
         try
         {
-            //Common Directories-----------------------------------------------------------------------------
-            //Building the basic paths and directory required
-            // 1. Build the file path where the temporary HTML file will be stored.
+            // Generate filepath to save base64 html template
+            string htmlTemplateFilePath = Path.Combine(
+                this._hostingEnvironment.WebRootPath,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT_HTML").Value,
+                CommonMethodsHelper.GenerateRandomFileName("html")
+            );
 
-            string rootFolder = Path.Combine(Directory.GetCurrentDirectory(), "Temp");
-            string inputFolder = Path.Combine(rootFolder, "Input");
-            string outputFolder = Path.Combine(rootFolder, "Output");
+            CommonMethodsHelper.CreateDirectoryIfNotExists(htmlTemplateFilePath);
 
-            //Creating Temp folder if not exists
-            if (!Directory.Exists(rootFolder))
+            // Save base64 html template to inputs directory
+            Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath);
+
+            // Initialize tools and output filepaths
+            string htmlToPDfToolsFilePath = Path.Combine(
+                this._hostingEnvironment.WebRootPath,
+                this._configuration.GetSection("STATIC_FILE_PATHS:HTML_TO_PDF_TOOL").Value
+            );
+
+            string outputFilePath = Path.Combine(
+                this._hostingEnvironment.WebRootPath,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_HTML").Value,
+                CommonMethodsHelper.GenerateRandomFileName("pdf")
+            );
+
+            CommonMethodsHelper.CreateDirectoryIfNotExists(outputFilePath);
+
+            // Generate and save pdf in output directory
+            PdfDocumentGenerator.GeneratePdfByTemplate(
+                htmlToPDfToolsFilePath,
+                htmlTemplateFilePath,
+                request.DocumentData.Placeholders,
+                outputFilePath
+            );
+
+            // Convert pdf file in output directory to base64 string
+            string outputBase64String = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
+
+            // Return response
+            return this.Ok(new
             {
-                Directory.CreateDirectory(rootFolder);
-            }
-            //Creating Input folder if not exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Directory.CreateDirectory(inputFolder);
-            }
-            
-                //Creating Output folder if not exists
-                if (!Directory.Exists(outputFolder))
-                {
-                    Directory.CreateDirectory(outputFolder);
-                }
-            //---------------------------------------------------------------------------------------------------------
-            //HTML&Pdf specific folder structure---------------------------------------------------------------------------
-
-            //Creating html folder inside Input folder---------------------------------------------
-            string htmlFolder = Path.Combine(inputFolder, "Html");
-
-                //Creating Html folder if not exists inside Input folder
-                if (!Directory.Exists(htmlFolder))
-                {
-                    Directory.CreateDirectory(htmlFolder);
-                }
-            //------------------------------------------------------------------------------
-
-            //Creating Pdf folder inside Output folder--------------------------
-            string pdfFolder = Path.Combine(outputFolder, "Pdf");
-                
-
-                if (!Directory.Exists(pdfFolder))
-                {
-                    Directory.CreateDirectory(pdfFolder);
-                }
-            //----------------------------------------------------------------
-
-
-            //input base64 decoded file path
-            string ext, randomFileName, randomFileNameWithExtension;
-
-            ext = "html";
-            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
-            randomFileNameWithExtension = $"{randomFileName}.{ext}";
-
-            string base64FilePath = Path.Combine(htmlFolder, randomFileNameWithExtension);
-            //intermediate modified file path
-            //string modifiedFilePath = Path.Combine(htmlFolder, "intermediateFile.html");
-
-            //output pdf File path
-            ext = "pdf";
-            randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
-            randomFileNameWithExtension = $"{randomFileName}.{ext}";
-
-            string outputFilePath = Path.Combine(pdfFolder, randomFileNameWithExtension);
-
-
-
-
-                // 2. Convert the base64 to file. The file should be stored in the temp directory decided in step #2.
-                Base64StringHelper.SaveBase64StringToFilePath(request.Base64, base64FilePath);
-
-                // 3. Pass the file to the Document Service for conversion. The file should be stored in the temp location.
-                // passing in main function template to pdf.
-                string toolFolderAbsolutePath = "F:\\Desktop\\DS-Final2\\document-service\\DocumentServiceWebAPI\\Tools\\wkhtmltopdf.exe";
-                PdfDocumentGenerator.GeneratePdfByTemplate(toolFolderAbsolutePath, base64FilePath, request.DocumentData.Placeholders, outputFilePath);
-
-                // 4. Convert the output file to base64 and send it as a response.
-                string base64 = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
-                return Ok(new { message = "PDF generated successfully", Base64 = base64 });
-
-
-            
+                message = "PDF generated successfully",
+                Base64 = outputBase64String
+            });
         }
         catch (Exception ex)
         {
-            return BadRequest($"PDF generation failed: {ex.Message}");
+            return this.BadRequest($"PDF generation failed: {ex.Message}");
         }
     }
 }

@@ -17,4 +17,10 @@ public static class CommonMethodsHelper
             }
         }
     }
+
+    public static string GenerateRandomFileName(string fileExtension)
+    {
+        string randomFileName = Path.GetRandomFileName().Replace(".", string.Empty);
+        return $"{randomFileName}-{Guid.NewGuid()}.{fileExtension}";
+    }
 }
