@@ -82,7 +82,7 @@ namespace DocumentService.Pdf
                 string errors = process.StandardError.ReadToEnd();
             }
 
-            File.Delete(modifiedHtmlFilePath);
+            //File.Delete(modifiedHtmlFilePath);
         }
         private static string CompileEjsToHtml(string ejsFilePath, string outputFilePath)
         {
@@ -95,19 +95,36 @@ namespace DocumentService.Pdf
 
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
             // Path to the ejs-cli tool
-            string ejsCliPath = "ejs-cli";
+            string ejsCliPath = @"C:\Users\Sephali\AppData\Roaming\npm\ejs-cli";
+
+            //string ejsCliPath = "C:\\Users\\Sephali\\AppData\\Roaming\\npm\\ejs-cli";
+            Console.WriteLine("ejs-cliPath: " + ejsCliPath);
             // Execute ejs-cli command to compile EJS and produce HTML
-            string ejsCliArgs = $"npx ejs {ejsFilePath} -o {tempHtmlFile}";
+            // string ejsCliArgs = $"npx ejs {ejsFilePath} -o {tempHtmlFile}";
+            //string ejsCliArgs = $"/C {ejsCliPath} {ejsFilePath} -o {tempHtmlFile}";
+            Console.Write(ejsFilePath);
+            string ejsCliArgs = $"{ejsCliPath} .\\testnew.ejs -o .\\output.html";
+            Console.WriteLine("Arguments: " + ejsCliArgs);
+            //string ejsCliArgs = $"\"{ejsFilePath}\" -o \"{tempHtmlFile}\"";
 
             using (Process ejsCliProcess = new Process())
             {
-                ejsCliProcess.StartInfo.FileName = ejsCliPath;
+                ejsCliProcess.StartInfo.FileName = "cmd.exe";
                 ejsCliProcess.StartInfo.Arguments = ejsCliArgs;
-                ejsCliProcess.StartInfo.RedirectStandardOutput = false;
-                ejsCliProcess.StartInfo.UseShellExecute = true;
+                ejsCliProcess.StartInfo.RedirectStandardOutput = true;
+                //ejsCliProcess.StartInfo.UseShellExecute = false;
+                ejsCliProcess.StartInfo.RedirectStandardError = true;
+                ejsCliProcess.StartInfo.UseShellExecute = false;
                 ejsCliProcess.StartInfo.CreateNoWindow = true;
                 ejsCliProcess.Start();
                 ejsCliProcess.WaitForExit();
+                //string errors = ejsCliProcess.StandardError.ReadToEnd();
+                //Console.WriteLine(errors);
+
+                //RedirectStandardOutput = true,
+                //RedirectStandardError = true,
+                //UseShellExecute = false,
+                //CreateNoWindow = true
 
                 if (ejsCliProcess.ExitCode != 0)
                 {
@@ -115,6 +132,21 @@ namespace DocumentService.Pdf
                     return null;
                 }
             }
+
+            //ProcessStartInfo psi = new ProcessStartInfo
+            //{
+            //    FileName = ejsCliPath, 
+            //    Arguments = ejsCliArgs, 
+            //    RedirectStandardOutput = false, 
+            //    UseShellExecute = true, 
+            //    CreateNoWindow = true
+            //};
+            //using (Process ejsCliProcess = new Process())
+            //{
+            //    ejsCliProcess.StartInfo = psi; 
+            //    ejsCliProcess.Start(); 
+            //    ejsCliProcess.WaitForExit();
+            //}
             return tempHtmlFile;
         }
     }
