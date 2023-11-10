@@ -87,15 +87,15 @@ public class PdfController : ControllerBase
 
 
                 // 2. Convert the base64 to file. The file should be stored in the temp directory decided in step #2.
-                string templatePath = Base64Helper.ConvertBase64ToFile(request.Base64, base64FilePath);
+                Base64StringHelper.SaveBase64StringToFilePath(request.Base64, base64FilePath);
 
                 // 3. Pass the file to the Document Service for conversion. The file should be stored in the temp location.
                 // passing in main function template to pdf.
                 string toolFolderAbsolutePath = "F:\\Desktop\\DS-Final2\\document-service\\DocumentServiceWebAPI\\Tools\\wkhtmltopdf.exe";
-                PdfDocumentGenerator.GeneratePdfByTemplate(toolFolderAbsolutePath, templatePath, request.DocumentData.Placeholders, outputFilePath);
+                PdfDocumentGenerator.GeneratePdfByTemplate(toolFolderAbsolutePath, base64FilePath, request.DocumentData.Placeholders, outputFilePath);
 
                 // 4. Convert the output file to base64 and send it as a response.
-                string base64 = Base64Helper.ConvertFileToBase64(outputFilePath);
+                string base64 = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
                 return Ok(new { message = "PDF generated successfully", Base64 = base64 });
 
 

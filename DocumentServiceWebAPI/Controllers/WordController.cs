@@ -60,7 +60,7 @@ public class WordController : ControllerBase
 
             string base64FilePath = Path.Combine(wordInputFolder, randomFileNameWithExtension);
 
-            string templateFilePath = Base64Helper.ConvertBase64ToFile(request.Base64,base64FilePath );
+            string templateFilePath = Base64StringHelper.ConvertBase64ToFile(request.Base64,base64FilePath );
             //-------------------------------------------------------------------------------------
            
 
@@ -79,7 +79,7 @@ public class WordController : ControllerBase
             };
 
             WordDocumentGenerator.GenerateDocumentByTemplate(templateFilePath, documentData, outputFilePath);
-            string base64 = Base64Helper.ConvertFileToBase64(outputFilePath);
+            string base64 = Base64StringHelper.ConvertFileToBase64(outputFilePath);
 
             return Ok(new { message = "Word document generated successfully.", Base64 = base64 });
         }
