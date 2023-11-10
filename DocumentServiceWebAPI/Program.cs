@@ -4,10 +4,7 @@ using System.Text.Json.Serialization;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Controller Services
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add(new ProducesAttribute("application/json"));
-})
+builder.Services.AddControllers(options => options.Filters.Add(new ProducesAttribute("application/json")))
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -15,7 +12,8 @@ builder.Services.AddControllers(options =>
     });
 
 // Swagger UI Services
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.IgnoreObsoleteActions();
     c.IgnoreObsoleteProperties();

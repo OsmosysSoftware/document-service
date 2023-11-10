@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DocumentService.Word.Models;
+﻿using DocumentService.Word.Models;
+using System.ComponentModel.DataAnnotations;
 namespace DocumentServiceWebAPI.Models;
 
 

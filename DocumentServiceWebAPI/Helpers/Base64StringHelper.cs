@@ -3,11 +3,11 @@
 public static class Base64StringHelper
 {
 
-    public static void SaveBase64StringToFilePath(string base64String, string filePath) 
+    public static void SaveBase64StringToFilePath(string base64String, string filePath)
     {
-        byte[] data = Convert.FromBase64String(base64String);            
+        byte[] data = Convert.FromBase64String(base64String);
         File.WriteAllBytes(filePath, data);
-    } 
+    }
 
     public static string ConvertFileToBase64String(string filePath)
     {
