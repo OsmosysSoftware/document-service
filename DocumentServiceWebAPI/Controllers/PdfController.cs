@@ -45,7 +45,7 @@ public class PdfController : ControllerBase
 
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_HTML").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_PDF").Value,
                 CommonMethodsHelper.GenerateRandomFileName("pdf")
             );
 
