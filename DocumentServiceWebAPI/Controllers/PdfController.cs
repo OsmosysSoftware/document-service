@@ -12,11 +12,13 @@ public class PdfController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _hostingEnvironment;
+    private readonly ILogger<PdfController> _logger;
 
-    public PdfController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+    public PdfController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment, ILogger<PdfController> logger)
     {
         this._configuration = configuration;
         this._hostingEnvironment = hostingEnvironment;
+        this._logger = logger;
     }
 
     [HttpPost]
@@ -72,8 +74,10 @@ public class PdfController : ControllerBase
         }
         catch (Exception ex)
         {
-            response.Status =ResponseStatus.Error;
+            response.Status = ResponseStatus.Error;
             response.Message = ex.Message;
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
             return this.StatusCode(StatusCodes.Status500InternalServerError, response);
         }
     }

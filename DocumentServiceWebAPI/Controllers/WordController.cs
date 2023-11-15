@@ -10,11 +10,13 @@ public class WordController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _hostingEnvironment;
+    private readonly ILogger<WordController> _logger;
 
-    public WordController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+    public WordController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment, ILogger<WordController> logger)
     {
         this._configuration = configuration;
         this._hostingEnvironment = hostingEnvironment;
+        this._logger = logger;
     }
 
     [HttpPost]
@@ -66,6 +68,8 @@ public class WordController : ControllerBase
         {
             response.Status = ResponseStatus.Error;
             response.Message = ex.Message;
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
             return this.StatusCode(StatusCodes.Status500InternalServerError, response);
         }
     }
