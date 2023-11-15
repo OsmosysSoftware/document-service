@@ -21,8 +21,10 @@ public class PdfController : ControllerBase
 
     [HttpPost]
     [Route("pdf/GeneratePdfUsingHtml")]
-    public IActionResult GeneratePdf(PdfGenerationRequestDTO request)
+    public ActionResult<BaseResponse> GeneratePdf(PdfGenerationRequestDTO request)
     {
+        BaseResponse response = new BaseResponse(ResponseStatus.Fail);
+
         try
         {
             // Generate filepath to save base64 html template
@@ -63,15 +65,16 @@ public class PdfController : ControllerBase
             string outputBase64String = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
 
             // Return response
-            return this.Ok(new
-            {
-                message = "PDF generated successfully",
-                Base64 = outputBase64String
-            });
+            response.Status = ResponseStatus.Success;
+            response.Base64 = outputBase64String;
+            response.Message = "PDF generated successfully";
+            return this.Ok(response);
         }
         catch (Exception ex)
         {
-            return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            response.Status =ResponseStatus.Error;
+            response.Message = ex.Message;
+            return this.StatusCode(StatusCodes.Status500InternalServerError, response);
         }
     }
 }

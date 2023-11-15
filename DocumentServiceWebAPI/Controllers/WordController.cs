@@ -19,8 +19,10 @@ public class WordController : ControllerBase
 
     [HttpPost]
     [Route("word/GenerateWordDocument")]
-    public IActionResult GenerateWord(WordGenerationRequestDTO request)
+    public ActionResult<BaseResponse> GenerateWord(WordGenerationRequestDTO request)
     {
+        BaseResponse response = new BaseResponse(ResponseStatus.Fail);
+
         try
         {
             // Generate filepath to save base64 docx template
@@ -55,15 +57,16 @@ public class WordController : ControllerBase
             string outputBase64String = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
 
             // Return response
-            return this.Ok(new
-            {
-                message = "Word document generated successfully",
-                Base64 = outputBase64String
-            });
+            response.Status = ResponseStatus.Success;
+            response.Base64 = outputBase64String;
+            response.Message = "Word document generated successfully";
+            return this.Ok(response);
         }
         catch (Exception ex)
         {
-            return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            response.Status = ResponseStatus.Error;
+            response.Message = ex.Message;
+            return this.StatusCode(StatusCodes.Status500InternalServerError, response);
         }
     }
 }

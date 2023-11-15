@@ -1,3 +1,4 @@
+using DocumentServiceWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
@@ -18,6 +19,15 @@ builder.Services.AddSwaggerGen(c =>
     c.IgnoreObsoleteActions();
     c.IgnoreObsoleteProperties();
     c.CustomSchemaIds(type => type.FullName);
+});
+
+// Configure Error Response from Model Validations
+builder.Services.AddMvc().ConfigureApiBehaviorOptions(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        return ModelValidationBadRequest.ModelValidationErrorResponse(actionContext);
+    };
 });
 
 WebApplication app = builder.Build();
