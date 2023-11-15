@@ -305,18 +305,11 @@ namespace DocumentService.Word
                 }
             }
 
-            // Save the updated document bytes to the output file path
-            File.WriteAllBytes(outputFilePath, memoryStream.ToArray());
-
-            // Close the memory stream
-            memoryStream.Close();
-        
-
         // Overwrite the output file
         FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
         memoryStream.WriteTo(fileStream);
-            fileStream.Close();
-            memoryStream.Close();
+        fileStream.Close();
+        memoryStream.Close();
         }
     }
 }
