@@ -63,7 +63,7 @@ public class WordController : ControllerBase
         }
         catch (Exception ex)
         {
-            return this.BadRequest($"Word document generation failed: {ex.Message}");
+            return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 }
