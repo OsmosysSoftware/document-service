@@ -62,6 +62,11 @@ public class WordController : ControllerBase
                         throw new BadHttpRequestException("Image extension is required for image content data");
                     }
 
+                    if (string.IsNullOrWhiteSpace(placeholder.Content))
+                    {
+                        throw new BadHttpRequestException("Image content data is required");
+                    }
+
                     // Remove '.' from image extension if present
                     placeholder.ImageExtension = placeholder.ImageExtension.Replace(".", string.Empty);
 
