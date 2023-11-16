@@ -23,7 +23,7 @@ public class PdfController : ControllerBase
 
     [HttpPost]
     [Route("pdf/GeneratePdfUsingHtml")]
-    public ActionResult<BaseResponse> GeneratePdf(PdfGenerationRequestDTO request)
+    public async Task<ActionResult<BaseResponse>> GeneratePdf(PdfGenerationRequestDTO request)
     {
         BaseResponse response = new BaseResponse(ResponseStatus.Fail);
 
@@ -39,7 +39,7 @@ public class PdfController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(htmlTemplateFilePath);
 
             // Save base64 html template to inputs directory
-            Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath);
+            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath);
 
             // Initialize tools and output filepaths
             string htmlToPDfToolsFilePath = Path.Combine(
@@ -64,7 +64,7 @@ public class PdfController : ControllerBase
             );
 
             // Convert pdf file in output directory to base64 string
-            string outputBase64String = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
+            string outputBase64String = await Base64StringHelper.ConvertFileToBase64String(outputFilePath);
 
             // Return response
             response.Status = ResponseStatus.Success;

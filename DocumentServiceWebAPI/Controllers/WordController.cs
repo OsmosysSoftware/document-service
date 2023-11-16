@@ -25,7 +25,7 @@ public class WordController : ControllerBase
 
     [HttpPost]
     [Route("word/GenerateWordDocument")]
-    public ActionResult<BaseResponse> GenerateWord(WordGenerationRequestDTO request)
+    public async Task<ActionResult<BaseResponse>> GenerateWord(WordGenerationRequestDTO request)
     {
         BaseResponse response = new BaseResponse(ResponseStatus.Fail);
 
@@ -41,7 +41,7 @@ public class WordController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(docxTemplateFilePath);
 
             // Save docx template to inputs directory
-            Base64StringHelper.SaveBase64StringToFilePath(request.Base64, docxTemplateFilePath);
+            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, docxTemplateFilePath);
 
             // Initialize output filepath
             string outputFilePath = Path.Combine(
@@ -80,7 +80,7 @@ public class WordController : ControllerBase
                     CommonMethodsHelper.CreateDirectoryIfNotExists(imageFilePath);
 
                     // Save image content base64 string to inputs directory
-                    Base64StringHelper.SaveBase64StringToFilePath(placeholder.Content, imageFilePath);
+                    await Base64StringHelper.SaveBase64StringToFilePath(placeholder.Content, imageFilePath);
 
                     // Replace placeholder content with image file path
                     placeholder.Content = imageFilePath;
@@ -102,7 +102,7 @@ public class WordController : ControllerBase
             );
 
             // Convert docx file in output directory to base64 string
-            string outputBase64String = Base64StringHelper.ConvertFileToBase64String(outputFilePath);
+            string outputBase64String = await Base64StringHelper.ConvertFileToBase64String(outputFilePath);
 
             // Return response
             response.Status = ResponseStatus.Success;
