@@ -72,6 +72,30 @@ public class PdfController : ControllerBase
             response.Message = "PDF generated successfully";
             return this.Ok(response);
         }
+        catch (BadHttpRequestException ex)
+        {
+            response.Status = ResponseStatus.Error;
+            response.Message = ex.Message;
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
+            return this.BadRequest(response);
+        }
+        catch (FormatException ex)
+        {
+            response.Status = ResponseStatus.Error;
+            response.Message = "Error converting base64 string to file";
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
+            return this.BadRequest(response);
+        }
+        catch (FileNotFoundException ex)
+        {
+            response.Status = ResponseStatus.Error;
+            response.Message = "Unable to load file saved from base64 string";
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
+            return this.StatusCode(StatusCodes.Status500InternalServerError, response);
+        }
         catch (Exception ex)
         {
             response.Status = ResponseStatus.Error;
