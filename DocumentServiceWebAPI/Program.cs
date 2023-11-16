@@ -4,6 +4,7 @@ using Serilog.Events;
 using Serilog;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,21 @@ builder.Services.AddControllers(options => options.Filters.Add(new ProducesAttri
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+// Configure request size limit
+long requestBodySizeLimitBytes = Convert.ToInt64(builder.Configuration.GetSection("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES").Value);
+
+// Configure request size for Kestrel server - ASP.NET Core project templates use Kestrel by default when not hosted with IIS
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = requestBodySizeLimitBytes;
+});
+
+// Configure request size for IIS server
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = requestBodySizeLimitBytes;
+});
 
 // AutoMapper Services
 builder.Services.AddAutoMapper(typeof(Program));
