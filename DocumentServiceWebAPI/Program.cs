@@ -35,13 +35,7 @@ builder.Services.Configure<IISServerOptions>(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 // Swagger UI Services
-builder.Services.AddSwaggerGen(c =>
-{
-    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-    c.IgnoreObsoleteActions();
-    c.IgnoreObsoleteProperties();
-    c.CustomSchemaIds(type => type.FullName);
-});
+builder.Services.AddSwaggerGen();
 
 // Setup Rate limiting service
 int permitLimit = Convert.ToInt32(builder.Configuration.GetSection("RATE_LIMITING:PERMIT_LIMIT").Value);
