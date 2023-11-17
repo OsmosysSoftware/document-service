@@ -6,6 +6,7 @@ using DocumentServiceWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentServiceWebAPI.Controllers;
+
 [Route("api")]
 [ApiController]
 public class WordController : ControllerBase

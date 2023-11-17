@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentServiceWebAPI.Controllers;
 
-
 [Route("api")]
 [ApiController]
 public class PdfController : ControllerBase
