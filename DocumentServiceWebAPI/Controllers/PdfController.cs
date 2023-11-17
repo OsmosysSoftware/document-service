@@ -39,7 +39,7 @@ public class PdfController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(htmlTemplateFilePath);
 
             // Save base64 html template to inputs directory
-            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath);
+            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath, this._configuration);
 
             // Initialize tools and output filepaths
             string htmlToPDfToolsFilePath = Path.Combine(

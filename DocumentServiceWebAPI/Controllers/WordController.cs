@@ -41,7 +41,7 @@ public class WordController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(docxTemplateFilePath);
 
             // Save docx template to inputs directory
-            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, docxTemplateFilePath);
+            await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, docxTemplateFilePath, this._configuration);
 
             // Initialize output filepath
             string outputFilePath = Path.Combine(
@@ -80,7 +80,7 @@ public class WordController : ControllerBase
                     CommonMethodsHelper.CreateDirectoryIfNotExists(imageFilePath);
 
                     // Save image content base64 string to inputs directory
-                    await Base64StringHelper.SaveBase64StringToFilePath(placeholder.Content, imageFilePath);
+                    await Base64StringHelper.SaveBase64StringToFilePath(placeholder.Content, imageFilePath, this._configuration);
 
                     // Replace placeholder content with image file path
                     placeholder.Content = imageFilePath;
