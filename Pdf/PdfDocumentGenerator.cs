@@ -18,9 +18,15 @@ namespace DocumentService.Pdf
                     throw new Exception("The file path you provided is not valid.");
                 }
 
-                // If input template is an ejs file then convert ejs file to an equivalent html
                 if (isEjsTemplate)
                 {
+                    // Validate if template in file path is an ejs file
+                    if (Path.GetExtension(templatePath).ToLower() != ".ejs")
+                    {
+                        throw new Exception("Input template should be a valid EJS file");
+                    }
+
+                    // Convert ejs file to an equivalent html
                     templatePath = ConvertEjsToHTML(templatePath, outputFilePath);
                 }
 
