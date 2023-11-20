@@ -33,6 +33,16 @@ namespace DocumentService.Pdf
                 // Modify html template with content data and generate pdf
                 string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
                 ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
+
+                if (isEjsTemplate)
+                {
+                    // If input template was an ejs file, then the template path contains path to html converted from ejs
+                    if (Path.GetExtension(templatePath).ToLower() == ".html")
+                    {
+                        // If template path contains path to converted html template then delete it
+                        File.Delete(templatePath);
+                    }
+                }
             }
             catch (Exception e)
             {
