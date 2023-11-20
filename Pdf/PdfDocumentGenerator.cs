@@ -18,17 +18,14 @@ namespace DocumentService.Pdf
                     throw new Exception("The file path you provided is not valid.");
                 }
 
-                string modifiedHtmlFilePath;
+                // If input template is an ejs file then convert ejs file to an equivalent html
                 if (isEjsTemplate)
                 {
-                    modifiedHtmlFilePath = CompileEjsToHtml(templatePath, outputFilePath);
+                    templatePath = ConvertEjsToHTML(templatePath, outputFilePath);
                 }
-                else
-                {
-                    modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
-                }
-                modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
 
+                // Modify html template with content data and generate pdf
+                string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
                 ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
             }
             catch (Exception e)
@@ -36,6 +33,7 @@ namespace DocumentService.Pdf
                 throw e;
             }
         }
+
         private static string ReplaceFileElementsWithMetaData(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
         {
             string htmlContent = File.ReadAllText(templatePath);
@@ -82,72 +80,45 @@ namespace DocumentService.Pdf
                 string errors = process.StandardError.ReadToEnd();
             }
 
-            //File.Delete(modifiedHtmlFilePath);
+            File.Delete(modifiedHtmlFilePath);
         }
-        private static string CompileEjsToHtml(string ejsFilePath, string outputFilePath)
+
+        private static string ConvertEjsToHTML(string ejsFilePath, string outputFilePath)
         {
             string directoryPath = Path.GetDirectoryName(outputFilePath);
             string tempHtmlFilePath = Path.Combine(directoryPath, "Temp");
+
             if (!Directory.Exists(tempHtmlFilePath))
             {
                 Directory.CreateDirectory(tempHtmlFilePath);
             }
 
-            string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
-            // Path to the ejs-cli tool
-            string ejsCliPath = @"C:\Users\Sephali\AppData\Roaming\npm\ejs-cli";
+            tempHtmlFilePath = Path.Combine(tempHtmlFilePath, "htmlTemplate.html");
 
-            //string ejsCliPath = "C:\\Users\\Sephali\\AppData\\Roaming\\npm\\ejs-cli";
-            Console.WriteLine("ejs-cliPath: " + ejsCliPath);
-            // Execute ejs-cli command to compile EJS and produce HTML
-            // string ejsCliArgs = $"npx ejs {ejsFilePath} -o {tempHtmlFile}";
-            //string ejsCliArgs = $"/C {ejsCliPath} {ejsFilePath} -o {tempHtmlFile}";
-            Console.Write(ejsFilePath);
-            string ejsCliArgs = $"{ejsCliPath} .\\testnew.ejs -o .\\output.html";
-            Console.WriteLine("Arguments: " + ejsCliArgs);
-            //string ejsCliArgs = $"\"{ejsFilePath}\" -o \"{tempHtmlFile}\"";
+            string commandLine = "cmd.exe";
+            string arguments = $"/C ejs \"{ejsFilePath}\" -o \"{tempHtmlFilePath}\"";
 
-            using (Process ejsCliProcess = new Process())
+            ProcessStartInfo psi = new ProcessStartInfo
             {
-                ejsCliProcess.StartInfo.FileName = "cmd.exe";
-                ejsCliProcess.StartInfo.Arguments = ejsCliArgs;
-                ejsCliProcess.StartInfo.RedirectStandardOutput = true;
-                //ejsCliProcess.StartInfo.UseShellExecute = false;
-                ejsCliProcess.StartInfo.RedirectStandardError = true;
-                ejsCliProcess.StartInfo.UseShellExecute = false;
-                ejsCliProcess.StartInfo.CreateNoWindow = true;
-                ejsCliProcess.Start();
-                ejsCliProcess.WaitForExit();
-                //string errors = ejsCliProcess.StandardError.ReadToEnd();
-                //Console.WriteLine(errors);
+                FileName = commandLine,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
 
-                //RedirectStandardOutput = true,
-                //RedirectStandardError = true,
-                //UseShellExecute = false,
-                //CreateNoWindow = true
-
-                if (ejsCliProcess.ExitCode != 0)
-                {
-                    Console.WriteLine("EJS compilation failed");
-                    return null;
-                }
+            using (Process process = new Process())
+            {
+                process.StartInfo = psi;
+                process.Start();
+                process.WaitForExit();
+                string output = process.StandardOutput.ReadToEnd();
+                string errors = process.StandardError.ReadToEnd();
             }
 
-            //ProcessStartInfo psi = new ProcessStartInfo
-            //{
-            //    FileName = ejsCliPath, 
-            //    Arguments = ejsCliArgs, 
-            //    RedirectStandardOutput = false, 
-            //    UseShellExecute = true, 
-            //    CreateNoWindow = true
-            //};
-            //using (Process ejsCliProcess = new Process())
-            //{
-            //    ejsCliProcess.StartInfo = psi; 
-            //    ejsCliProcess.Start(); 
-            //    ejsCliProcess.WaitForExit();
-            //}
-            return tempHtmlFile;
+
+            return tempHtmlFilePath;
         }
     }
 }
