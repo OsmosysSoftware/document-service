@@ -1,4 +1,6 @@
 ﻿using DocumentService.Pdf.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -116,6 +118,12 @@ namespace DocumentService.Pdf
             // Generate file path to converted html template
             string tempHtmlFilePath = Path.Combine(tempDirectoryFilePath, "htmlTemplate.html");
 
+            // If the ejs data json is invalid then throw exception
+            if (!string.IsNullOrWhiteSpace(ejsDataJson) && !IsValidJSON(ejsDataJson))
+            {
+                throw new Exception("Received invalid JSON data for EJS template");
+            }
+
             // Write json data string to json file
             string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
             File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
@@ -146,6 +154,19 @@ namespace DocumentService.Pdf
             File.Delete(ejsDataJsonFilePath);
 
             return tempHtmlFilePath;
+        }
+
+        private static bool IsValidJSON(string json)
+        {
+            try
+            {
+                JToken.Parse(json);
+                return true;
+            }
+            catch (JsonReaderException)
+            {
+                return false;
+            }
         }
     }
 }
