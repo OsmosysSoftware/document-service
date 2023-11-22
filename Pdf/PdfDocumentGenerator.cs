@@ -8,7 +8,7 @@ namespace DocumentService.Pdf
 {
     public class PdfDocumentGenerator
     {
-        public static void GeneratePdf(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate)
+        public static void GeneratePdf(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
         {
             try
             {
@@ -26,7 +26,7 @@ namespace DocumentService.Pdf
                     }
 
                     // Convert ejs file to an equivalent html
-                    templatePath = ConvertEjsToHTML(templatePath, outputFilePath);
+                    templatePath = ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
                 }
 
                 // Modify html template with content data and generate pdf
@@ -102,20 +102,26 @@ namespace DocumentService.Pdf
             File.Delete(modifiedHtmlFilePath);
         }
 
-        private static string ConvertEjsToHTML(string ejsFilePath, string outputFilePath)
+        private static string ConvertEjsToHTML(string ejsFilePath, string outputFilePath, string ejsDataJson)
         {
+            // Generate directory
             string directoryPath = Path.GetDirectoryName(outputFilePath);
-            string tempHtmlFilePath = Path.Combine(directoryPath, "Temp");
+            string tempDirectoryFilePath = Path.Combine(directoryPath, "Temp");
 
-            if (!Directory.Exists(tempHtmlFilePath))
+            if (!Directory.Exists(tempDirectoryFilePath))
             {
-                Directory.CreateDirectory(tempHtmlFilePath);
+                Directory.CreateDirectory(tempDirectoryFilePath);
             }
 
-            tempHtmlFilePath = Path.Combine(tempHtmlFilePath, "htmlTemplate.html");
+            // Generate file path to converted html template
+            string tempHtmlFilePath = Path.Combine(tempDirectoryFilePath, "htmlTemplate.html");
+
+            // Write json data string to json file
+            string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
+            File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
 
             string commandLine = "cmd.exe";
-            string arguments = $"/C ejs \"{ejsFilePath}\" -o \"{tempHtmlFilePath}\"";
+            string arguments = $"/C ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -135,6 +141,9 @@ namespace DocumentService.Pdf
                 string output = process.StandardOutput.ReadToEnd();
                 string errors = process.StandardError.ReadToEnd();
             }
+
+            // Delete json data file
+            File.Delete(ejsDataJsonFilePath);
 
             return tempHtmlFilePath;
         }
