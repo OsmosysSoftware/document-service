@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using DocumentService.Pdf.Models;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using DocumentService.Pdf.Models;
 using System.Diagnostics;
+using System.IO;
 
 namespace DocumentService.Pdf
 {
@@ -75,6 +74,10 @@ namespace DocumentService.Pdf
         private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
+
+            /*
+             * FIXME: Issue if tools file path has spaces in between
+             */
             string arguments = $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
@@ -132,7 +135,6 @@ namespace DocumentService.Pdf
                 string output = process.StandardOutput.ReadToEnd();
                 string errors = process.StandardError.ReadToEnd();
             }
-
 
             return tempHtmlFilePath;
         }
