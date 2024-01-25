@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog.Events;
 using Serilog;
 using System.Text.Json.Serialization;
-using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -36,27 +35,6 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Swagger UI Services
 builder.Services.AddSwaggerGen();
-
-// Setup Rate limiting service
-int permitLimit = Convert.ToInt32(builder.Configuration.GetSection("RATE_LIMITING:PERMIT_LIMIT").Value);
-int queueLimit = Convert.ToInt32(builder.Configuration.GetSection("RATE_LIMITING:QUEUE_LIMIT").Value);
-int windowTimeLimitSeconds = Convert.ToInt32(builder.Configuration.GetSection("RATE_LIMITING:WINDOW_TIME_LIMIT_SECONDS").Value);
-
-builder.Services.AddRateLimiter(options =>
-{
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-    RateLimitPartition.GetFixedWindowLimiter(
-        partitionKey: httpContext.Request.Headers.Host.ToString(),
-        factory: partition => new FixedWindowRateLimiterOptions
-        {
-            AutoReplenishment = true,
-            PermitLimit = permitLimit,
-            QueueLimit = queueLimit,
-            Window = TimeSpan.FromSeconds(windowTimeLimitSeconds)
-        }));
-
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-});
 
 // Configure Error Response from Model Validations
 builder.Services.AddMvc().ConfigureApiBehaviorOptions(options =>
@@ -91,8 +69,6 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.UseRateLimiter();
 
 app.MapControllers();
 
