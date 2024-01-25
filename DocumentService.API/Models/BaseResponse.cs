@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace DocumentServiceWebAPI.Models;
+namespace DocumentService.API.Models;
 
 public enum ResponseStatus
 {

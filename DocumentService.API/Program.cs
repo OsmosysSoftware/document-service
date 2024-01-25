@@ -1,4 +1,4 @@
-using DocumentServiceWebAPI.Models;
+using DocumentService.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog.Events;
 using Serilog;

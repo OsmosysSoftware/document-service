@@ -1,7 +1,7 @@
 ﻿using DocumentService.Word.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DocumentServiceWebAPI.Models;
+namespace DocumentService.API.Models;
 
 
 public class WordGenerationRequestDTO

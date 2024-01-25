@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService", "DocumentService\DocumentService.csproj", "{AC14A26A-220C-487E-9D7B-BB0548D86318}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentServiceWebAPI", "DocumentServiceWebAPI\DocumentServiceWebAPI.csproj", "{2D2738C1-032B-441A-9298-1722A4915BD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService.API", "DocumentService.API\DocumentService.API.csproj", "{2D2738C1-032B-441A-9298-1722A4915BD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

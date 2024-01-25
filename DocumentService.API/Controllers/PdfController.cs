@@ -1,9 +1,9 @@
 ﻿using DocumentService.Pdf;
-using DocumentServiceWebAPI.Helpers;
-using DocumentServiceWebAPI.Models;
+using DocumentService.API.Helpers;
+using DocumentService.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DocumentServiceWebAPI.Controllers;
+namespace DocumentService.API.Controllers;
 
 [Route("api")]
 [ApiController]

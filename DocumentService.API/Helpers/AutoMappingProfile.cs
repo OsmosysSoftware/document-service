@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DocumentService.Word.Models;
-using DocumentServiceWebAPI.Models;
+using DocumentService.API.Models;
 
-namespace DocumentServiceWebAPI.Helpers;
+namespace DocumentService.API.Helpers;
 
 public class AutoMappingProfile : Profile
 {

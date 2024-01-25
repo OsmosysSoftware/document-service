@@ -1,4 +1,4 @@
-﻿namespace DocumentServiceWebAPI.Helpers;
+﻿namespace DocumentService.API.Helpers;
 
 public static class CommonMethodsHelper
 {
