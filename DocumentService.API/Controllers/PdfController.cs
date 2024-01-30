@@ -55,11 +55,13 @@ public class PdfController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(outputFilePath);
 
             // Generate and save pdf in output directory
-            PdfDocumentGenerator.GeneratePdfByTemplate(
+            PdfDocumentGenerator.GeneratePdf(
                 htmlToPDfToolsFilePath,
                 htmlTemplateFilePath,
                 request.DocumentData.Placeholders,
-                outputFilePath
+                outputFilePath,
+                isEjsTemplate: false,
+                serializedEjsDataJson: null
             );
 
             // Convert pdf file in output directory to base64 string
