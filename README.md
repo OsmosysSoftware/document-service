@@ -16,6 +16,19 @@ DocumentService is a library with the following functions
 - Converts an HTML document to PDF.
 - Replace placeholders in the document with actual string data.
 
+# How to setup (Windows)
+
+## Steps for installing wkhtmltopdf
+- Go to website: https://wkhtmltopdf.org/downloads.html
+- Select the version of wkhtmltopdf installer that you need to download based on your system requirements.
+- Finish Installation.
+
+## Including wkhtmltopdf executable file to build package
+- Go to the location to the bin files of your project where the DocumentService DLL is located.
+- Create a folder called Tools and place the wkhtmltopdf.exe file there. wkhtmltopdf.exe can be found in the Program Files in C directory after it is installed.
+
+Note: We are using a Temp folder to temporarily hold the modified html file before converting it to PDF file. After the conversion is done, the temporary file is removed.The code is already provided with the location of temp file so no modification required in code and the temp folder will be used automatically.
+
 # Basic usage
 
 ## PDF generation

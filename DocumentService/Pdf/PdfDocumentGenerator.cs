@@ -1,27 +1,51 @@
-﻿using System;
-using System.IO;
+﻿using DocumentService.Pdf.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using DocumentService.Pdf.Models;
 using System.Diagnostics;
+using System.IO;
 
 namespace DocumentService.Pdf
-{     
+{
     public class PdfDocumentGenerator
     {
-        public static void GeneratePdfByTemplate(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath)
+        public static void GeneratePdf(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
         {
-            try 
-            { 
-                if(!File.Exists(templatePath))
+            try
+            {
+                if (!File.Exists(templatePath))
                 {
-                    throw new Exception("The file path you provided is not Valid"); 
+                    throw new Exception("The file path you provided is not valid.");
                 }
-                
-                string modifiedHtmlFilePath =  ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
+
+                if (isEjsTemplate)
+                {
+                    // Validate if template in file path is an ejs file
+                    if (Path.GetExtension(templatePath).ToLower() != ".ejs")
+                    {
+                        throw new Exception("Input template should be a valid EJS file");
+                    }
+
+                    // Convert ejs file to an equivalent html
+                    templatePath = ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
+                }
+
+                // Modify html template with content data and generate pdf
+                string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
                 ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
-            } 
-            catch(Exception e)
+
+                if (isEjsTemplate)
+                {
+                    // If input template was an ejs file, then the template path contains path to html converted from ejs
+                    if (Path.GetExtension(templatePath).ToLower() == ".html")
+                    {
+                        // If template path contains path to converted html template then delete it
+                        File.Delete(templatePath);
+                    }
+                }
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -35,7 +59,7 @@ namespace DocumentService.Pdf
             {
                 htmlContent = htmlContent.Replace($"{{{metaData.Placeholder}}}", metaData.Content);
             }
-                
+
             string directoryPath = Path.GetDirectoryName(outputFilePath);
             string tempHtmlFilePath = Path.Combine(directoryPath, "Modified");
             string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
@@ -45,22 +69,26 @@ namespace DocumentService.Pdf
                 Directory.CreateDirectory(tempHtmlFilePath);
             }
 
-            File.WriteAllText(tempHtmlFile, htmlContent);    
+            File.WriteAllText(tempHtmlFile, htmlContent);
             return tempHtmlFile;
         }
 
         private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
+
+            /*
+             * FIXME: Issue if tools file path has spaces in between
+             */
             string arguments = $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = wkHtmlToPdfPath, 
-                Arguments = arguments, 
-                RedirectStandardOutput = true, 
-                RedirectStandardError = true, 
-                UseShellExecute = false, 
+                FileName = wkHtmlToPdfPath,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
                 CreateNoWindow = true
             };
 
@@ -74,6 +102,71 @@ namespace DocumentService.Pdf
             }
 
             File.Delete(modifiedHtmlFilePath);
+        }
+
+        private static string ConvertEjsToHTML(string ejsFilePath, string outputFilePath, string ejsDataJson)
+        {
+            // Generate directory
+            string directoryPath = Path.GetDirectoryName(outputFilePath);
+            string tempDirectoryFilePath = Path.Combine(directoryPath, "Temp");
+
+            if (!Directory.Exists(tempDirectoryFilePath))
+            {
+                Directory.CreateDirectory(tempDirectoryFilePath);
+            }
+
+            // Generate file path to converted html template
+            string tempHtmlFilePath = Path.Combine(tempDirectoryFilePath, "htmlTemplate.html");
+
+            // If the ejs data json is invalid then throw exception
+            if (!string.IsNullOrWhiteSpace(ejsDataJson) && !IsValidJSON(ejsDataJson))
+            {
+                throw new Exception("Received invalid JSON data for EJS template");
+            }
+
+            // Write json data string to json file
+            string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
+            File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
+
+            string commandLine = "cmd.exe";
+            string arguments = $"/C ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
+
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = commandLine,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (Process process = new Process())
+            {
+                process.StartInfo = psi;
+                process.Start();
+                process.WaitForExit();
+                string output = process.StandardOutput.ReadToEnd();
+                string errors = process.StandardError.ReadToEnd();
+            }
+
+            // Delete json data file
+            File.Delete(ejsDataJsonFilePath);
+
+            return tempHtmlFilePath;
+        }
+
+        private static bool IsValidJSON(string json)
+        {
+            try
+            {
+                JToken.Parse(json);
+                return true;
+            }
+            catch (JsonReaderException)
+            {
+                return false;
+            }
         }
     }
 }
