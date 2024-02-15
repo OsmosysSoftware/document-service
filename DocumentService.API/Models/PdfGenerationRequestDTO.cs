@@ -9,4 +9,5 @@ public class PdfGenerationRequestDTO
     public string? Base64 { get; set; }
     [Required(ErrorMessage = "Data to be modified in PDF is required")]
     public DocumentData? DocumentData { get; set; }
+    public string? SerializedEjsDataJson { get; set; }
 }
