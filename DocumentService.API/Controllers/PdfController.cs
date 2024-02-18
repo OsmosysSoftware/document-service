@@ -2,6 +2,7 @@
 using DocumentService.API.Helpers;
 using DocumentService.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace DocumentService.API.Controllers;
 
@@ -31,7 +32,9 @@ public class PdfController : ControllerBase
             // Generate filepath to save base64 html template
             string htmlTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT_HTML").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:HTML").Value,
                 CommonMethodsHelper.GenerateRandomFileName("html")
             );
 
@@ -48,7 +51,9 @@ public class PdfController : ControllerBase
 
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_PDF").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value,
                 CommonMethodsHelper.GenerateRandomFileName("pdf")
             );
 

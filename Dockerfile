@@ -28,11 +28,15 @@ WORKDIR /app
 # Copy the published artifacts from the build stage
 COPY --from=build /app/out .
 
-# Install only necessary dependencies for Node.js and npm
+# Install only necessary dependencies for wkhtmltopdf, Node.js and npm
 RUN apt-get update \
+    && apt-get install -y --fix-missing wkhtmltopdf \
     && apt-get install -y --fix-missing nodejs \
     && apt-get install -y --no-install-recommends npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install wkhtmltopdf and allow execute access
+RUN chmod 777 /usr/bin/wkhtmltopdf
 
 # Install ejs globally without unnecessary dependencies
 RUN npm install -g --only=prod ejs

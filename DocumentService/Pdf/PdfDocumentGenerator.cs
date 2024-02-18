@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace DocumentService.Pdf
 {
@@ -76,11 +77,15 @@ namespace DocumentService.Pdf
         private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             string wkHtmlToPdfPath = "cmd.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                wkHtmlToPdfPath = "wkhtmltopdf";
+            }
 
             /*
              * FIXME: Issue if tools file path has spaces in between
              */
-            string arguments = $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            string arguments = HtmlToPdfArgumentsBasedOnOS(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -128,8 +133,8 @@ namespace DocumentService.Pdf
             string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
             File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
 
-            string commandLine = "cmd.exe";
-            string arguments = $"/C ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
+            string commandLine = CommandLineBasedOnOS();
+            string arguments = EjsToHtmlArgumentsBasedOnOS(ejsFilePath, ejsDataJsonFilePath, tempHtmlFilePath);
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -166,6 +171,54 @@ namespace DocumentService.Pdf
             catch (JsonReaderException)
             {
                 return false;
+            }
+        }
+
+        private static string CommandLineBasedOnOS()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "cmd.exe";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "bash";
+            }
+            else
+            {
+                throw new Exception("Unknown operating system");
+            }
+        }
+
+        private static string EjsToHtmlArgumentsBasedOnOS(string ejsFilePath, string ejsDataJsonFilePath, string tempHtmlFilePath)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return $"/C ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return $"ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
+            }
+            else
+            {
+                throw new Exception("Unknown operating system");
+            }
+        }
+
+        private static string HtmlToPdfArgumentsBasedOnOS(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return $"{modifiedHtmlFilePath} {outputFilePath}";
+            }
+            else
+            {
+                throw new Exception("Unknown operating system");
             }
         }
     }
