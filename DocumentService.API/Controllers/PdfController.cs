@@ -123,7 +123,9 @@ public class PdfController : ControllerBase
             // Generate filepath to save base64 html template
             string ejsTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT_EJS").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:EJS").Value,
                 CommonMethodsHelper.GenerateRandomFileName("ejs")
             );
 
@@ -140,7 +142,9 @@ public class PdfController : ControllerBase
 
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_PDF").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value,
                 CommonMethodsHelper.GenerateRandomFileName("pdf")
             );
 

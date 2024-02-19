@@ -35,7 +35,9 @@ public class WordController : ControllerBase
             // Generate filepath to save base64 docx template
             string docxTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT_WORD").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
                 CommonMethodsHelper.GenerateRandomFileName("docx")
             );
 
@@ -47,7 +49,9 @@ public class WordController : ControllerBase
             // Initialize output filepath
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT_WORD").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
+                this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
                 CommonMethodsHelper.GenerateRandomFileName("docx")
             );
 
@@ -74,7 +78,10 @@ public class WordController : ControllerBase
                     // Generate a random image file name and its path
                     string imageFilePath = Path.Combine(
                         this._hostingEnvironment.WebRootPath,
-                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT_WORD_IMAGES").Value,
+                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
+                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
+                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
+                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:IMAGES").Value,
                         CommonMethodsHelper.GenerateRandomFileName(placeholder.ImageExtension)
                     );
 

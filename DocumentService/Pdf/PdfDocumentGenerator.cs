@@ -133,7 +133,11 @@ namespace DocumentService.Pdf
             string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
             File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
 
-            string commandLine = CommandLineBasedOnOS();
+            string commandLine = "cmd.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                commandLine = "ejs";
+            }
             string arguments = EjsToHtmlArgumentsBasedOnOS(ejsFilePath, ejsDataJsonFilePath, tempHtmlFilePath);
 
             ProcessStartInfo psi = new ProcessStartInfo
@@ -198,7 +202,7 @@ namespace DocumentService.Pdf
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return $"ejs \"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
+                return $"{ejsFilePath} -f {ejsDataJsonFilePath} -o {tempHtmlFilePath}";
             }
             else
             {
