@@ -178,15 +178,15 @@ namespace DocumentService.Pdf
             }
         }
 
-        private static string CommandLineBasedOnOS()
+        private static string HtmlToPdfArgumentsBasedOnOS(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return "cmd.exe";
+                return $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "bash";
+                return $"{modifiedHtmlFilePath} {outputFilePath}";
             }
             else
             {
@@ -203,22 +203,6 @@ namespace DocumentService.Pdf
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 return $"{ejsFilePath} -f {ejsDataJsonFilePath} -o {tempHtmlFilePath}";
-            }
-            else
-            {
-                throw new Exception("Unknown operating system");
-            }
-        }
-
-        private static string HtmlToPdfArgumentsBasedOnOS(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return $"{modifiedHtmlFilePath} {outputFilePath}";
             }
             else
             {
