@@ -36,7 +36,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install wkhtmltopdf and allow execute access
-RUN chmod 777 /usr/bin/wkhtmltopdf
+RUN chmod 755 /usr/bin/wkhtmltopdf
 
 # Install ejs globally without unnecessary dependencies
 RUN npm install -g --only=prod ejs
