@@ -6,6 +6,9 @@ WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5000
 
+# Build configuration variable. Debug as default
+ENV BUILD_CONFIGURATION=Debug
+
 # Copy data
 COPY ["DocumentService.API/DocumentService.API.csproj", "DocumentService.API/"]
 COPY ["DocumentService/DocumentService.csproj", "DocumentService/"]
@@ -19,7 +22,7 @@ COPY . .
 WORKDIR "/app/DocumentService.API"
 
 # Build the project and store artifacts in /out folder
-RUN dotnet publish "./DocumentService.API.csproj" -c Debug -o /app/out
+RUN dotnet publish "./DocumentService.API.csproj" -c BUILD_CONFIGURATION -o /app/out
 
 # Use the official ASP.NET runtime image as the base image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
