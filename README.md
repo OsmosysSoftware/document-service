@@ -10,7 +10,7 @@ DocumentService is a library with the following functions
 - Replace placeholders in tables.
 - Multiple placeholders in the same table cell/line/paragraph can be replaced.
 - Populate table with new data.
-- Replace images with image's placeholder. The image's position will be maintained based on position of its placeholder image. Image size will be also be maintained based on placeholder image.
+- Replace images with image's placeholder. The image's position will be maintained based on the position of its placeholder image. Image size will also be maintained based on placeholder image.
 
 ## PDF document generation
 - Converts an HTML document to PDF.
@@ -23,7 +23,7 @@ The development of this application is done on Visual Studio IDE on a Windows ma
 ## Steps
 
 1. [Install Docker](https://docs.docker.com/engine/install/) on your machine. Choose to follow the instructions based on your device OS.
-2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
+2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux-based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
 3. Clone the project `document-service`.
 4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
 5. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
@@ -47,7 +47,7 @@ docker-compose -f docker-compose.yaml up
 ```
 
 7. The project will run on `http://localhost:5000`.
-8. You can access the **Swagger UI** at `http:localhost:5000/swagger/index.html` in **Development Environment**.
+8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development Environment**.
 9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
 
 # How to set up the library (Windows)
