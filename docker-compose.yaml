@@ -11,4 +11,4 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - ASPNETCORE_ENVIRONMENT=Development
-      - BUILD_CONFIGURATION=Release
+      - BUILD_CONFIGURATION=Debug
