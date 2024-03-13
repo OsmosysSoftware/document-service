@@ -10,20 +10,20 @@ DocumentService is a library with the following functions
 - Replace placeholders in tables.
 - Multiple placeholders in the same table cell/line/paragraph can be replaced.
 - Populate table with new data.
-- Replace images with image's placeholder. The image's postion will be maintained based on position of its placeholder image. Image size will be also be maintained based on placeholder image.
+- Replace images with image's placeholder. The image's position will be maintained based on position of its placeholder image. Image size will be also be maintained based on placeholder image.
 
 ## PDF document generation
 - Converts an HTML document to PDF.
 - Replace placeholders in the document with actual string data.
 
-# How to setup app in a Docker based environment (Linux)
+# How to set up the Application in a Docker-based environment (Linux)
 
-The development of this application is done on Visual Studio IDE on a Windows machine. Setting up the app in a Docker based environment enables developers of non-Windows origins to run the backend application on their machine to test the APIs.
+The development of this application is done on Visual Studio IDE on a Windows machine. Setting up the app in a Docker-based environment enables developers of non-Windows origins to run the backend application on their machine to test the APIs.
 
 ## Steps
 
 1. [Install Docker](https://docs.docker.com/engine/install/) on your machine. Choose to follow the instructions based on your device OS.
-2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux based OS. If you are using Windows or MacOS, installing the Docker Desktop app includes Docker Compose.
+2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
 3. Clone the project `document-service`.
 4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
 5. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
@@ -46,11 +46,11 @@ The development of this application is done on Visual Studio IDE on a Windows ma
 docker-compose -f docker-compose.yaml up
 ```
 
-7. Project will run on `http://localhost:5000`.
-8. You can access the **Swagger UI** at `http:localhost:5000/swagger/index.html` in **Development Enviroment**.
+7. The project will run on `http://localhost:5000`.
+8. You can access the **Swagger UI** at `http:localhost:5000/swagger/index.html` in **Development Environment**.
 9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
 
-# How to setup library (Windows)
+# How to set up the library (Windows)
 
 ## Steps for installing wkhtmltopdf
 - Go to website: https://wkhtmltopdf.org/downloads.html
@@ -61,7 +61,7 @@ docker-compose -f docker-compose.yaml up
 - Go to the location to the bin files of your project where the DocumentService DLL is located.
 - Create a folder called Tools and place the wkhtmltopdf.exe file there. wkhtmltopdf.exe can be found in the Program Files in C directory after it is installed.
 
-Note: We are using a Temp folder to temporarily hold the modified html file before converting it to PDF file. After the conversion is done, the temporary file is removed.The code is already provided with the location of temp file so no modification required in code and the temp folder will be used automatically.
+Note: We use a Temp folder to temporarily hold the modified HTML file before converting it to a PDF file. After the conversion is done, the temporary file is removed. The code is already provided with the location of the temp file, so no modification is required in the code, and the temp folder will be used automatically.
 
 # Basic usage
 
