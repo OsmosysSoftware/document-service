@@ -18,7 +18,7 @@ DocumentService is a library with the following functions
 
 # How to set up the Application in a Docker-based environment (Linux)
 
-The development of this application is done on Visual Studio IDE on a Windows machine. Setting up the app in a Docker-based environment enables developers of non-Windows origins to run the backend application on their machine to test the APIs.
+Setting up the app in a Docker-based environment enables developers of non-Windows origins to run the backend application on their machine to test the APIs.
 
 ## Steps
 
@@ -46,9 +46,35 @@ The development of this application is done on Visual Studio IDE on a Windows ma
 docker-compose -f docker-compose.yaml up
 ```
 
-7. The project will run on `http://localhost:5000`.
+7. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
 8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development Environment**.
 9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
+
+## Troubleshooting
+
+A known issue while building the container is the following:
+
+```shell
+E: failed to solve: process "/bin/sh -c <sample Dockerfile step>" did not complete successfully: exit code: 100
+```
+
+This is a network related issue where it is failing to fetch files from an external source. It can be verified in the **Docker logs**:
+
+```shell
+E: Failed to fetch http://sample/link/for.file Unable to connect to sample.download.location:80: [IP: ...]
+```
+
+**Solution:** Prune the build cache and rebuild the application using the following commands:
+
+```shell
+# prune the build cache
+docker system prune -a
+
+# rebuild the container
+docker-compose -f docker-compose.yaml up
+```
+
+**NOTE:** Please go through the [official documentation for prune command](https://docs.docker.com/reference/cli/docker/system/prune/) before using it.
 
 # How to set up the library (Windows)
 
