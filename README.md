@@ -10,13 +10,79 @@ DocumentService is a library with the following functions
 - Replace placeholders in tables.
 - Multiple placeholders in the same table cell/line/paragraph can be replaced.
 - Populate table with new data.
-- Replace images with image's placeholder. The image's postion will be maintained based on position of its placeholder image. Image size will be also be maintained based on placeholder image.
+- Replace images with image's placeholder. The image's position will be maintained based on the position of its placeholder image. Image size will also be maintained based on placeholder image.
 
 ## PDF document generation
 - Converts an HTML document to PDF.
 - Replace placeholders in the document with actual string data.
 
-# How to setup (Windows)
+# How to set up the Application in a Docker-based environment (Linux)
+
+Setting up the app in a Docker-based environment enables developers of non-Windows origins to run the backend application on their machine to test the APIs.
+
+## Steps
+
+1. [Install Docker](https://docs.docker.com/engine/install/) on your machine. Choose to follow the instructions based on your device OS.
+2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux-based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
+3. Clone the project `document-service`.
+4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
+5. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
+
+#### Development (Default Configuration)
+```yaml
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BUILD_CONFIGURATION=Debug
+```
+
+#### Testing/Staging
+```yaml
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BUILD_CONFIGURATION=Release
+```
+
+#### Production
+```yaml
+      - ASPNETCORE_ENVIRONMENT=Production
+      - BUILD_CONFIGURATION=Release
+```
+
+6. Ensure Docker is running. Then, in root directory of project, execute the following command to build container for `document-service`:
+
+```shell
+docker-compose -f docker-compose.yaml up
+```
+
+7. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
+8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development** Environment.
+9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
+
+## Troubleshooting
+
+A known issue while building the container is the following:
+
+```shell
+E: failed to solve: process "/bin/sh -c <sample Dockerfile step>" did not complete successfully: exit code: 100
+```
+
+This is a network related issue where it is failing to fetch files from an external source. It can be verified in the **Docker logs**:
+
+```shell
+E: Failed to fetch http://sample/link/for.file Unable to connect to sample.download.location:80: [IP: ...]
+```
+
+**Solution:** Prune the failed build and rebuild the application using the following commands:
+
+```shell
+# prune all unused containers, networks, images, build cache
+docker system prune -a
+
+# rebuild the container
+docker-compose -f docker-compose.yaml up
+```
+
+**NOTE:** Please go through the [official documentation on prune command](https://docs.docker.com/config/pruning/) before using it.
+
+# How to set up the library (Windows)
 
 ## Steps for installing wkhtmltopdf
 - Go to website: https://wkhtmltopdf.org/downloads.html
@@ -27,7 +93,7 @@ DocumentService is a library with the following functions
 - Go to the location to the bin files of your project where the DocumentService DLL is located.
 - Create a folder called Tools and place the wkhtmltopdf.exe file there. wkhtmltopdf.exe can be found in the Program Files in C directory after it is installed.
 
-Note: We are using a Temp folder to temporarily hold the modified html file before converting it to PDF file. After the conversion is done, the temporary file is removed.The code is already provided with the location of temp file so no modification required in code and the temp folder will be used automatically.
+Note: We use a Temp folder to temporarily hold the modified HTML file before converting it to a PDF file. After the conversion is done, the temporary file is removed. The code is already provided with the location of the temp file, so no modification is required in the code, and the temp folder will be used automatically.
 
 # Basic usage
 
@@ -99,7 +165,6 @@ List<TableData> tablesData = new List<TableData>()
     };
 
     WordDocumentGenerator.GenerateDocumentByTemplate(templateFilePath, documentData, outputFilePath);
-}
 ```
 
 # Targeted frameworks
