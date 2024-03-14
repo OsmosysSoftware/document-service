@@ -34,6 +34,12 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
       - BUILD_CONFIGURATION=Debug
 ```
 
+#### Testing/Staging
+```yaml
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BUILD_CONFIGURATION=Release
+```
+
 #### Production
 ```yaml
       - ASPNETCORE_ENVIRONMENT=Production
@@ -47,7 +53,7 @@ docker-compose -f docker-compose.yaml up
 ```
 
 7. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
-8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development Environment**.
+8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development** Environment.
 9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
 
 ## Troubleshooting
@@ -64,17 +70,17 @@ This is a network related issue where it is failing to fetch files from an exter
 E: Failed to fetch http://sample/link/for.file Unable to connect to sample.download.location:80: [IP: ...]
 ```
 
-**Solution:** Prune the build cache and rebuild the application using the following commands:
+**Solution:** Prune the failed build and rebuild the application using the following commands:
 
 ```shell
-# prune the build cache
+# prune all unused containers, networks, images, build cache
 docker system prune -a
 
 # rebuild the container
 docker-compose -f docker-compose.yaml up
 ```
 
-**NOTE:** Please go through the [official documentation for prune command](https://docs.docker.com/reference/cli/docker/system/prune/) before using it.
+**NOTE:** Please go through the [official documentation on prune command](https://docs.docker.com/config/pruning/) before using it.
 
 # How to set up the library (Windows)
 
