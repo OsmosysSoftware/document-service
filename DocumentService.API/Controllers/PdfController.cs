@@ -2,7 +2,7 @@
 using DocumentService.API.Helpers;
 using DocumentService.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DocumentService.API.Controllers;
 
@@ -22,6 +22,7 @@ public class PdfController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Route("pdf/GeneratePdfUsingHtml")]
     public async Task<ActionResult<BaseResponse>> GeneratePdf(PdfGenerationRequestDTO request)
     {
@@ -113,6 +114,7 @@ public class PdfController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Route("pdf/GeneratePdfUsingEjs")]
     public async Task<ActionResult<BaseResponse>> GeneratePdfUsingEjs(PdfGenerationRequestDTO request)
     {

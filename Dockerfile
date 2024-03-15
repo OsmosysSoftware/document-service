@@ -21,6 +21,10 @@ RUN dotnet restore "./DocumentService/./DocumentService.csproj"
 COPY . .
 WORKDIR "/app/DocumentService.API"
 
+# Install EF Core tools extension
+RUN dotnet tool install --global dotnet-ef --version 6.0.0
+ENV PATH $PATH:/root/.dotnet/tools
+
 # Build the project and store artifacts in /out folder
 RUN dotnet publish "./DocumentService.API.csproj" -c BUILD_CONFIGURATION -o /app/out
 
