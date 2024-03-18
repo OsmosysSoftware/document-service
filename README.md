@@ -27,7 +27,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 3. Clone the project `document-service`.
 4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
 5. In root directory of project, create a new file `.env`.
-6. Copy data from [example template](.env.example) into `.env`. Then set suitable credentials.
+6. Copy data from [example template](.env.example) into `.env`. Then set suitable credentials. Use a valid email. Ensure password has 8-20 characters with 1 uppercase, 1 lowercase, 1 number & 1 special character.
 7. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
 
 #### Development (Default Configuration)
@@ -48,7 +48,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
       - BUILD_CONFIGURATION=Release
 ```
 
-8. Ensure Docker is running.
+8. Ensure Dockeris running.
 9. Then, in root directory of project, execute the following command to build container for `document-service`:
 
 ```shell
