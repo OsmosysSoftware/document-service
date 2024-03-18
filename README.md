@@ -48,7 +48,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
       - BUILD_CONFIGURATION=Release
 ```
 
-8. Ensure Dockeris running.
+8. Ensure Docker is running.
 9. Then, in root directory of project, execute the following command to build container for `document-service`:
 
 ```shell
