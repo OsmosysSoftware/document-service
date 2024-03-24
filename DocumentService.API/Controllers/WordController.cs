@@ -4,6 +4,7 @@ using DocumentService.Word.Models;
 using DocumentService.API.Helpers;
 using DocumentService.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DocumentService.API.Controllers;
 
@@ -25,6 +26,7 @@ public class WordController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Route("word/GenerateWordDocument")]
     public async Task<ActionResult<BaseResponse>> GenerateWord(WordGenerationRequestDTO request)
     {

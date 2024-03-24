@@ -14,6 +14,7 @@ public class BaseResponse
     public BaseResponse(ResponseStatus status) => this.Status = status;
     public ResponseStatus? Status { get; set; }
     public string? Base64 { get; set; }
+    public string? AuthToken { get; set; }
     public string? Message { get; set; }
     public string? StackTrace { get; set; }
 }
