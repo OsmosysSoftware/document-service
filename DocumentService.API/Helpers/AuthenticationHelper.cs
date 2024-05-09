@@ -7,6 +7,7 @@ namespace DocumentService.API.Helpers;
 
 public class AuthenticationHelper
 {
+    // Function to generate non expiry jwt token based on email
     public static string JwtTokenGenerator(string LoginEmail)
     {
         SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
