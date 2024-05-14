@@ -26,7 +26,9 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux-based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
 3. Clone the project `document-service`.
 4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
-5. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
+5. In the root directory of the project, create a new file `.env`.
+6. Copy data from [example template](.env.example) into `.env`. Then set suitable JWT key.
+7. Set `environment` variables `ASPNETCORE_ENVIRONMENT` and `BUILD_CONFIGURATION` as per requirement in [docker-compose.yaml](./docker-compose.yaml). Ensure correct formatting:
 
 #### Development (Default Configuration)
 ```yaml
@@ -46,15 +48,16 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
       - BUILD_CONFIGURATION=Release
 ```
 
-6. Ensure Docker is running. Then, in root directory of project, execute the following command to build container for `document-service`:
+8. Ensure Docker is running.
+9. Then, in the root directory of the project, execute the following command to build a container for `document-service`:
 
 ```shell
 docker-compose -f docker-compose.yaml up
 ```
 
-7. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
-8. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development** Environment.
-9. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
+10. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
+11. You can access the **Swagger UI** at `http://localhost:5000/swagger/index.html` in **Development** Environment.
+12. Test the API via **Postman**. The app can be accessed using `http://localhost:5000/<API>`.
 
 ## Troubleshooting
 
