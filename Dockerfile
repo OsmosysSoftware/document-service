@@ -44,8 +44,5 @@ RUN chmod 755 /usr/bin/wkhtmltopdf
 # Install ejs globally without unnecessary dependencies
 RUN npm install -g --only=prod ejs
 
-# Set the environment variable for the application URL
-ENV DOTNET_URLS=http://localhost:5000
-
 # Set the entry point for the container
 ENTRYPOINT ["dotnet", "DocumentService.API.dll"]
