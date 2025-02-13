@@ -23,7 +23,7 @@ PR details have been updated as per the given format (see below)
 
 ### Additional Information
 
-- [ ] Appropriate label(s) have been added
+- [ ] Appropriate label(s) have been added (`ready for review` should be added if the PR is ready to be reviewed)
 - [ ] Assignee(s) and reviewer(s) have been added (optional)
 
 _Note: Reviewer should ensure that the checklist and description have been populated and followed correctly, and the PR should be merged only after resolving all conversations and verifying that CI checks pass._
