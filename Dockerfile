@@ -1,5 +1,5 @@
 # Use the official .NET SDK image as the build stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Expose the desired port
@@ -25,7 +25,7 @@ WORKDIR "/app/DocumentService.API"
 RUN dotnet publish "./DocumentService.API.csproj" -c BUILD_CONFIGURATION -o /app/out
 
 # Use the official ASP.NET runtime image as the base image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 
 # Copy the published artifacts from the build stage
@@ -43,9 +43,6 @@ RUN chmod 755 /usr/bin/wkhtmltopdf
 
 # Install ejs globally without unnecessary dependencies
 RUN npm install -g --only=prod ejs
-
-# Set the environment variable for the application URL
-ENV DOTNET_URLS=http://localhost:5000
 
 # Set the entry point for the container
 ENTRYPOINT ["dotnet", "DocumentService.API.dll"]
