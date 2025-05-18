@@ -52,7 +52,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 9. Then, in the root directory of the project, execute the following command to build a container for `document-service`:
 
 ```shell
-docker-compose -f docker-compose.yaml up
+docker compose -f docker-compose.yaml up
 ```
 
 10. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
@@ -80,7 +80,7 @@ E: Failed to fetch http://sample/link/for.file Unable to connect to sample.downl
 docker system prune -a
 
 # rebuild the container
-docker-compose -f docker-compose.yaml up
+docker compose -f docker-compose.yaml up
 ```
 
 **NOTE:** Please go through the [official documentation on prune command](https://docs.docker.com/config/pruning/) before using it.
