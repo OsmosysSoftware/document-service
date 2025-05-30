@@ -49,10 +49,14 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 ```
 
 8. Ensure Docker is running.
-9. Then, in the root directory of the project, execute the following command to build a container for `document-service`:
+9. Execute the following commands to dockerize `document-service` using `docker-compose.yaml`:
 
 ```shell
-docker-compose -f docker-compose.yaml up
+# build the container
+docker compose build
+
+# run the application
+docker compose up
 ```
 
 10. The project will run on `http://localhost:5000`. Please check [Troubleshooting](#troubleshooting) if the build failed.
@@ -80,7 +84,10 @@ E: Failed to fetch http://sample/link/for.file Unable to connect to sample.downl
 docker system prune -a
 
 # rebuild the container
-docker-compose -f docker-compose.yaml up
+docker compose build
+
+# run the application
+docker compose up
 ```
 
 **NOTE:** Please go through the [official documentation on prune command](https://docs.docker.com/config/pruning/) before using it.
