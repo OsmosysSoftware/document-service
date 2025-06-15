@@ -1,7 +1,7 @@
-﻿using DocumentService.Word.Models;
+﻿using OsmoDoc.Word.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DocumentService.API.Models;
+namespace OsmoDoc.API.Models;
 
 
 public class WordGenerationRequestDTO

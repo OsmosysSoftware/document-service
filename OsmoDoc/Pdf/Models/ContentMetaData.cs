@@ -1,4 +1,4 @@
-﻿namespace DocumentService.Pdf.Models;
+﻿namespace OsmoDoc.Pdf.Models;
 
 public class ContentMetaData
 {

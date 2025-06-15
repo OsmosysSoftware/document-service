@@ -1,4 +1,4 @@
-﻿using DocumentService.Pdf.Models;
+﻿using OsmoDoc.Pdf.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace DocumentService.Pdf;
+namespace OsmoDoc.Pdf;
 
 public class PdfDocumentGenerator
 {

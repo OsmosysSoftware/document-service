@@ -1,7 +1,7 @@
-﻿using DocumentService.Pdf.Models;
+﻿using OsmoDoc.Pdf.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DocumentService.API.Models;
+namespace OsmoDoc.API.Models;
 
 public class PdfGenerationRequestDTO
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DocumentService.Word.Models;
+namespace OsmoDoc.Word.Models;
 
 
 /// <summary>

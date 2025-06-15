@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace DocumentService.API.Models;
+namespace OsmoDoc.API.Models;
 
 public enum ResponseStatus
 {

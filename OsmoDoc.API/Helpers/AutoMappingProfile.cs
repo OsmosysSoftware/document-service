@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using DocumentService.Word.Models;
-using DocumentService.API.Models;
+using OsmoDoc.Word.Models;
+using OsmoDoc.API.Models;
 
-namespace DocumentService.API.Helpers;
+namespace OsmoDoc.API.Helpers;
 
 public class AutoMappingProfile : Profile
 {

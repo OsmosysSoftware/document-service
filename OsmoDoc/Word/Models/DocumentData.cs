@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DocumentService.Word.Models;
+namespace OsmoDoc.Word.Models;
 
 
 /// <summary>

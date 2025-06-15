@@ -1,10 +1,10 @@
-﻿using DocumentService.Pdf;
-using DocumentService.API.Helpers;
-using DocumentService.API.Models;
+﻿using OsmoDoc.Pdf;
+using OsmoDoc.API.Helpers;
+using OsmoDoc.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace DocumentService.API.Controllers;
+namespace OsmoDoc.API.Controllers;
 
 [Route("api")]
 [ApiController]

@@ -1,4 +1,4 @@
-﻿namespace DocumentService.API.Helpers;
+﻿namespace OsmoDoc.API.Helpers;
 
 public static class CommonMethodsHelper
 {

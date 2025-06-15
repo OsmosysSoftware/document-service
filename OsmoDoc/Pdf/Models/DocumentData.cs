@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DocumentService.Pdf.Models;
+namespace OsmoDoc.Pdf.Models;
 
 public class DocumentData
 {

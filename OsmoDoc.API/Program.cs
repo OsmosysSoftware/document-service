@@ -1,4 +1,4 @@
-using DocumentService.API.Models;
+using OsmoDoc.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog.Events;
 using Serilog;
@@ -23,7 +23,7 @@ builder.Services.AddControllers(options => options.Filters.Add(new ProducesAttri
 // Load .env file
 string root = Directory.GetCurrentDirectory();
 string dotenv = Path.GetFullPath(Path.Combine(root, "..", ".env"));
-DocumentService.API.DotEnv.Load(dotenv);
+OsmoDoc.API.DotEnv.Load(dotenv);
 
 // Configure request size limit
 long requestBodySizeLimitBytes = Convert.ToInt64(builder.Configuration.GetSection("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES").Value);
@@ -46,7 +46,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 // Swagger UI Services
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "DocumentService API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "OsmoDoc API", Version = "v1" });
 
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {

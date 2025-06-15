@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 
-namespace DocumentService.API.Helpers;
+namespace OsmoDoc.API.Helpers;
 
 public class AuthenticationHelper
 {

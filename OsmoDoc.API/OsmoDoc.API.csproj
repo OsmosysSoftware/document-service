@@ -12,6 +12,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DocumentService\DocumentService.csproj" />
+    <ProjectReference Include="..\OsmoDoc\OsmoDoc.csproj" />
   </ItemGroup>
 </Project>

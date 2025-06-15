@@ -1,4 +1,4 @@
-﻿namespace DocumentService.API;
+﻿namespace OsmoDoc.API;
 
 public static class DotEnv
 {

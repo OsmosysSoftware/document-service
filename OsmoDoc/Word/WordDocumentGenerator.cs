@@ -2,7 +2,7 @@ using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentService.Word.Models;
+using OsmoDoc.Word.Models;
 using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace DocumentService.Word;
+namespace OsmoDoc.Word;
 
 /// <summary>
 /// Provides functionality to generate Word documents based on templates and data.
