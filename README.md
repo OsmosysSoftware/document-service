@@ -1,5 +1,5 @@
-# DocumentService
-DocumentService is a library with the following functions
+# OsmoDoc
+OsmoDoc is a library with the following functions
 1. **Generate Word documents** - Read Word document files as a template and replace the placeholder with actual data.
 2. **Generate PDF documents** - Read an HTML file as a template and replace placeholders with actual data. Convert the HTML file to PDF
 
@@ -24,7 +24,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 
 1. [Install Docker](https://docs.docker.com/engine/install/) on your machine. Choose to follow the instructions based on your device OS.
 2. [Install Docker Compose](https://docs.docker.com/compose/install/). A separate installation is required for Linux-based OS. If you are using Windows or macOS, installing the Docker Desktop app includes Docker Compose.
-3. Clone the project `document-service`.
+3. Clone the project `osmodoc`.
 4. (Optional) [Install Docker Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker).
 5. In the root directory of the project, create a new file `.env`.
 6. Copy data from [example template](.env.example) into `.env`. Then set suitable JWT key.
@@ -49,7 +49,7 @@ Setting up the app in a Docker-based environment enables developers of non-Windo
 ```
 
 8. Ensure Docker is running.
-9. Execute the following commands to dockerize `document-service` using `docker-compose.yaml`:
+9. Execute the following commands to dockerize `osmodoc` using `docker-compose.yaml`:
 
 ```shell
 # build the container
@@ -100,7 +100,7 @@ docker compose up
 - Finish Installation.
 
 ## Including wkhtmltopdf executable file to build package
-- Go to the location to the bin files of your project where the DocumentService DLL is located.
+- Go to the location to the bin files of your project where the OsmoDoc DLL is located.
 - Create a folder called Tools and place the wkhtmltopdf.exe file there. wkhtmltopdf.exe can be found in the Program Files in C directory after it is installed.
 
 Note: We use a Temp folder to temporarily hold the modified HTML file before converting it to a PDF file. After the conversion is done, the temporary file is removed. The code is already provided with the location of the temp file, so no modification is required in the code, and the temp folder will be used automatically.
@@ -123,8 +123,8 @@ PdfDocumentGenerator.GeneratePdfByTemplate("Tools\\index.html", contentList, "To
 
 ## Word document generation
 ```csharp
-string templateFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\Document Service Component\Testing\Document.docx";
-string outputFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\Document Service Component\Testing\Test_Output.docx";
+string templateFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\OsmoDoc Component\Testing\Document.docx";
+string outputFilePath = @"C:\Users\Admin\Desktop\Osmosys\Work\Projects\OsmoDoc Service Component\Testing\Test_Output.docx";
 
 List<TableData> tablesData = new List<TableData>()
     {
@@ -187,11 +187,11 @@ List<TableData> tablesData = new List<TableData>()
 - [wkhtmltopdf](https://wkhtmltopdf.org/)
 
 # License
-The DocumentService is licensed under the [MIT](https://github.com/OsmosysSoftware/document-service/blob/main/LICENSE) license.
+The OsmoDoc is licensed under the [MIT](https://github.com/OsmosysSoftware/osmodoc/blob/main/LICENSE) license.
 ## 👏 Big Thanks to Our Contributors
 
-<a href="https://github.com/OsmosysSoftware/document-service/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=OsmosysSoftware/document-service" alt="Contributors" />
+<a href="https://github.com/OsmosysSoftware/osmodoc/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OsmosysSoftware/osmodoc" alt="Contributors" />
 </a>
 
 We appreciate the time and effort put in by all contributors to make this project better!

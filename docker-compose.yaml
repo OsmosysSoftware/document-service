@@ -1,10 +1,10 @@
 services:
-  document-service:
+  osmodoc:
     build:
       context: .
       dockerfile: Dockerfile
-    image: document-service-docker
-    container_name: document-service-api
+    image: osmodoc-docker
+    container_name: osmodoc-api
     env_file:
       - .env
     ports:
