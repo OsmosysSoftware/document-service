@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class DocumentData
+      <title>Class WordDocumentGenerator
  | Some Documentation </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class DocumentData
+      <meta name="title" content="Class WordDocumentGenerator
  | Some Documentation ">
     
       <link rel="shortcut icon" href="../../favicon.ico">
@@ -67,18 +67,18 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="DocumentService.Word.Models.DocumentData">
+            <article class="content wrap" id="_content" data-uid="OsmoDoc.Word.WordDocumentGenerator">
 
 
 
-  <h1 id="DocumentService_Word_Models_DocumentData" data-uid="DocumentService.Word.Models.DocumentData" class="text-break">Class DocumentData
+  <h1 id="OsmoDoc_Word_WordDocumentGenerator" data-uid="OsmoDoc.Word.WordDocumentGenerator" class="text-break">Class WordDocumentGenerator
 </h1>
-  <div class="markdown level0 summary">Represents the data for a Word document, including content placeholders and table data.</div>
+  <div class="markdown level0 summary">Provides functionality to generate Word documents based on templates and data.</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><span class="xref">DocumentData</span></div>
+    <div class="level1"><span class="xref">WordDocumentGenerator</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -104,57 +104,46 @@
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="DocumentService.html">DocumentService</a>.<a class="xref" href="DocumentService.Word.html">Word</a>.<a class="xref" href="DocumentService.Word.Models.html">Models</a></h6>
-  <h6><strong>Assembly</strong>: DocumentService.dll</h6>
-  <h5 id="DocumentService_Word_Models_DocumentData_syntax">Syntax</h5>
+  <h6><strong>Namespace</strong>: <a class="xref" href="OsmoDoc.html">OsmoDoc</a>.<a class="xref" href="OsmoDoc.Word.html">Word</a></h6>
+  <h6><strong>Assembly</strong>: OsmoDoc.dll</h6>
+  <h5 id="OsmoDoc_Word_WordDocumentGenerator_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DocumentData</code></pre>
+    <pre><code class="lang-csharp hljs">public static class WordDocumentGenerator</code></pre>
   </div>
-  <h3 id="properties">Properties
+  <h3 id="methods">Methods
 </h3>
-  <a id="DocumentService_Word_Models_DocumentData_Placeholders_" data-uid="DocumentService.Word.Models.DocumentData.Placeholders*"></a>
-  <h4 id="DocumentService_Word_Models_DocumentData_Placeholders" data-uid="DocumentService.Word.Models.DocumentData.Placeholders">Placeholders</h4>
-  <div class="markdown level1 summary">Gets or sets the list of content placeholders in the document.</div>
+  <a id="OsmoDoc_Word_WordDocumentGenerator_GenerateDocumentByTemplate_" data-uid="OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate*"></a>
+  <h4 id="OsmoDoc_Word_WordDocumentGenerator_GenerateDocumentByTemplate_System_String_OsmoDoc_Word_Models_DocumentData_System_String_" data-uid="OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate(System.String,OsmoDoc.Word.Models.DocumentData,System.String)">GenerateDocumentByTemplate(string, DocumentData, string)</h4>
+  <div class="markdown level1 summary">Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;ContentData&gt; Placeholders { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static void GenerateDocumentByTemplate(string templateFilePath, DocumentData documentData, string outputFilePath)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="DocumentService.Word.Models.ContentData.html">ContentData</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">templateFilePath</span></td>
+        <td>The file path of the template document.</td>
       </tr>
-    </tbody>
-  </table>
-  <a id="DocumentService_Word_Models_DocumentData_TablesData_" data-uid="DocumentService.Word.Models.DocumentData.TablesData*"></a>
-  <h4 id="DocumentService_Word_Models_DocumentData_TablesData" data-uid="DocumentService.Word.Models.DocumentData.TablesData">TablesData</h4>
-  <div class="markdown level1 summary">Gets or sets the list of table data in the document.</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;TableData&gt; TablesData { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Description</th>
+        <td><a class="xref" href="OsmoDoc.Word.Models.DocumentData.html">DocumentData</a></td>
+        <td><span class="parametername">documentData</span></td>
+        <td>The data to replace the placeholders in the template.</td>
       </tr>
-    </thead>
-    <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="DocumentService.Word.Models.TableData.html">TableData</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">outputFilePath</span></td>
+        <td>The file path to save the generated document.</td>
       </tr>
     </tbody>
   </table>

@@ -1,84 +1,84 @@
 {
   "homepages": [],
-  "source_base_path": "C:/Users/user/Desktop/document-service",
+  "source_base_path": "C:/Users/user/Desktop/osmodoc",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ContentData.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.ContentData.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.ContentData.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.ContentData.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ContentType.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.ContentType.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.ContentType.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.ContentType.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.DocumentData.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.DocumentData.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.DocumentData.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.DocumentData.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.ParentBody.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.ParentBody.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.ParentBody.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.ParentBody.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.TableData.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.TableData.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.TableData.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.TableData.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.Models.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.Models.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.Models.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.Models.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.WordDocumentGenerator.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.WordDocumentGenerator.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.WordDocumentGenerator.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.WordDocumentGenerator.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/10.0.2/api/DocumentService.Word.yml",
+      "source_relative_path": "obj/10.0.2/api/OsmoDoc.Word.yml",
       "output": {
         ".html": {
-          "relative_path": "10.0.2/api/DocumentService.Word.html"
+          "relative_path": "10.0.2/api/OsmoDoc.Word.html"
         }
       },
       "version": ""
