@@ -11,10 +11,15 @@ namespace OsmoDoc.Pdf;
 
 public class PdfDocumentGenerator
 {
-    public static void GeneratePdf(string toolFolderAbsolutePath, string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
+    public static void GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(OsmoDocPdfConfig.WkhtmltopdfPath) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                throw new Exception("WkhtmltopdfPath is not set in OsmoDocPdfConfig.");
+            }
+
             if (!File.Exists(templatePath))
             {
                 throw new Exception("The file path you provided is not valid.");
@@ -34,7 +39,7 @@ public class PdfDocumentGenerator
 
             // Modify html template with content data and generate pdf
             string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
-            ConvertHtmlToPdf(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
+            ConvertHtmlToPdf(OsmoDocPdfConfig.WkhtmltopdfPath, modifiedHtmlFilePath, outputFilePath);
 
             if (isEjsTemplate)
             {
@@ -74,22 +79,40 @@ public class PdfDocumentGenerator
         return tempHtmlFile;
     }
 
-    private static void ConvertHtmlToPdf(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
+    private static void ConvertHtmlToPdf(string? wkhtmltopdfPath, string modifiedHtmlFilePath, string outputFilePath)
     {
-        string wkHtmlToPdfPath = "cmd.exe";
+        string fileName;
+        string arguments;
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            wkHtmlToPdfPath = "wkhtmltopdf";
+            fileName = "wkhtmltopdf";
+            arguments = $"{modifiedHtmlFilePath} {outputFilePath}";
         }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            if (string.IsNullOrWhiteSpace(wkhtmltopdfPath))
+            {
+                throw new Exception("wkhtmltopdf path must be explicitly set on Windows.");
+            }
 
-        /*
-         * FIXME: Issue if tools file path has spaces in between
-         */
-        string arguments = HtmlToPdfArgumentsBasedOnOS(toolFolderAbsolutePath, modifiedHtmlFilePath, outputFilePath);
+            string fullPath = Path.GetFullPath(wkhtmltopdfPath);
+            if (!File.Exists(fullPath))
+            {
+                throw new FileNotFoundException($"wkhtmltopdf binary not found at: {fullPath}");
+            }
+
+            fileName = "cmd.exe";
+            arguments = $"/C \"{fullPath}\" \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Unsupported operating system.");
+        }
 
         ProcessStartInfo psi = new ProcessStartInfo
         {
-            FileName = wkHtmlToPdfPath,
+            FileName = fileName,
             Arguments = arguments,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -178,15 +201,15 @@ public class PdfDocumentGenerator
         }
     }
 
-    private static string HtmlToPdfArgumentsBasedOnOS(string toolFolderAbsolutePath, string modifiedHtmlFilePath, string outputFilePath)
+    private static string HtmlToPdfArgumentsBasedOnOS(string? wkhtmltopdfPath, string modifiedHtmlFilePath, string outputFilePath)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return $"/C {toolFolderAbsolutePath} \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            return $"/C \"{wkhtmltopdfPath}\" \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return $"{modifiedHtmlFilePath} {outputFilePath}";
+            return $"\"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
         }
         else
         {
