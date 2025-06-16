@@ -58,7 +58,7 @@ public class PdfDocumentGenerator
 
         foreach (ContentMetaData metaData in metaDataList)
         {
-            htmlContent = htmlContent.Replace($"{{{metaData.Placeholder}}}", metaData.Content);
+            htmlContent = htmlContent.Replace($"{{{{{metaData.Placeholder}}}}}", metaData.Content);
         }
 
         string directoryPath = Path.GetDirectoryName(outputFilePath);
