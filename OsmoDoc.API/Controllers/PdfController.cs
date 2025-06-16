@@ -45,7 +45,7 @@ public class PdfController : ControllerBase
             await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, htmlTemplateFilePath, this._configuration);
 
             // Initialize tools and output filepaths
-            string htmlToPDfToolsFilePath = Path.Combine(
+            OsmoDocPdfConfig.WkhtmltopdfPath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
                 this._configuration.GetSection("STATIC_FILE_PATHS:HTML_TO_PDF_TOOL").Value
             );
@@ -62,7 +62,6 @@ public class PdfController : ControllerBase
 
             // Generate and save pdf in output directory
             PdfDocumentGenerator.GeneratePdf(
-                htmlToPDfToolsFilePath,
                 htmlTemplateFilePath,
                 request.DocumentData.Placeholders,
                 outputFilePath,
@@ -137,7 +136,7 @@ public class PdfController : ControllerBase
             await Base64StringHelper.SaveBase64StringToFilePath(request.Base64, ejsTemplateFilePath, this._configuration);
 
             // Initialize tools and output filepaths
-            string ejsToPDfToolsFilePath = Path.Combine(
+            OsmoDocPdfConfig.WkhtmltopdfPath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
                 this._configuration.GetSection("STATIC_FILE_PATHS:HTML_TO_PDF_TOOL").Value
             );
@@ -154,7 +153,6 @@ public class PdfController : ControllerBase
 
             // Generate and save pdf in output directory
             PdfDocumentGenerator.GeneratePdf(
-                ejsToPDfToolsFilePath,
                 ejsTemplateFilePath,
                 request.DocumentData?.Placeholders,
                 outputFilePath,
