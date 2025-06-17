@@ -19,6 +19,6 @@ public class WordContentDataRequestDTO : ContentData
 
 public class WordDocumentDataRequestDTO
 {
-    public List<WordContentDataRequestDTO> Placeholders { get; set; }
-    public List<TableData> TablesData { get; set; }
+    public List<WordContentDataRequestDTO> Placeholders { get; set; } = new List<WordContentDataRequestDTO>();
+    public List<TableData> TablesData { get; set; } = new List<TableData>();
 }
