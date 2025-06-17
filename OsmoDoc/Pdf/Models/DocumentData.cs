@@ -6,5 +6,5 @@ namespace OsmoDoc.Pdf.Models;
 
 public class DocumentData
 {
-    public List<ContentMetaData> Placeholders { get; set; }
+    public List<ContentMetaData> Placeholders { get; set; } = new List<ContentMetaData>();
 }
