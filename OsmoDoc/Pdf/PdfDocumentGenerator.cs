@@ -11,6 +11,14 @@ namespace OsmoDoc.Pdf;
 
 public class PdfDocumentGenerator
 {
+    /// <summary>
+    /// Generates a PDF document from an HTML or EJS template.
+    /// </summary>
+    /// <param name="templatePath">The path to the HTML or EJS template file.</param>
+    /// <param name="metaDataList">A list of content metadata to replace placeholders in the template.</param>
+    /// <param name="outputFilePath">The desired output path for the generated PDF file.</param>
+    /// <param name="isEjsTemplate">A boolean indicating whether the template is an EJS file.</param>
+    /// <param name="serializedEjsDataJson">JSON string containing data for EJS template rendering. Required if isEjsTemplate is true.</param>
     public static void GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
     {
         try
@@ -102,8 +110,8 @@ public class PdfDocumentGenerator
                 throw new FileNotFoundException($"wkhtmltopdf binary not found at: {fullPath}");
             }
 
-            fileName = "cmd.exe";
-            arguments = $"/C \"{fullPath}\" \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
+            fileName = fullPath;
+            arguments = $"\"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
         }
         else
         {
@@ -127,6 +135,11 @@ public class PdfDocumentGenerator
             process.WaitForExit();
             string output = process.StandardOutput.ReadToEnd();
             string errors = process.StandardError.ReadToEnd();
+
+            if (process.ExitCode != 0)
+            {
+                throw new Exception($"Error during PDF generation: {errors} (Exit Code: {process.ExitCode})");
+            }
         }
 
         File.Delete(modifiedHtmlFilePath);
@@ -180,6 +193,11 @@ public class PdfDocumentGenerator
             process.WaitForExit();
             string output = process.StandardOutput.ReadToEnd();
             string errors = process.StandardError.ReadToEnd();
+
+            if (process.ExitCode != 0)
+            {
+                throw new Exception($"Error during EJS to HTML conversion: {errors} (Exit Code: {process.ExitCode})");
+            }
         }
 
         // Delete json data file
@@ -198,22 +216,6 @@ public class PdfDocumentGenerator
         catch (JsonReaderException)
         {
             return false;
-        }
-    }
-
-    private static string HtmlToPdfArgumentsBasedOnOS(string? wkhtmltopdfPath, string modifiedHtmlFilePath, string outputFilePath)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return $"/C \"{wkhtmltopdfPath}\" \"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return $"\"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
-        }
-        else
-        {
-            throw new Exception("Unknown operating system");
         }
     }
 
