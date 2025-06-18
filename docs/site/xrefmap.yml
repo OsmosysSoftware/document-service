@@ -1,195 +1,195 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
-- uid: DocumentService.Word
-  name: DocumentService.Word
-  href: 10.0.2/api/DocumentService.Word.html
-  commentId: N:DocumentService.Word
-  fullName: DocumentService.Word
-  nameWithType: DocumentService.Word
-- uid: DocumentService.Word.Models
-  name: DocumentService.Word.Models
-  href: 10.0.2/api/DocumentService.Word.Models.html
-  commentId: N:DocumentService.Word.Models
-  fullName: DocumentService.Word.Models
-  nameWithType: DocumentService.Word.Models
-- uid: DocumentService.Word.Models.ContentData
+- uid: OsmoDoc.Word
+  name: OsmoDoc.Word
+  href: 10.0.2/api/OsmoDoc.Word.html
+  commentId: N:OsmoDoc.Word
+  fullName: OsmoDoc.Word
+  nameWithType: OsmoDoc.Word
+- uid: OsmoDoc.Word.Models
+  name: OsmoDoc.Word.Models
+  href: 10.0.2/api/OsmoDoc.Word.Models.html
+  commentId: N:OsmoDoc.Word.Models
+  fullName: OsmoDoc.Word.Models
+  nameWithType: OsmoDoc.Word.Models
+- uid: OsmoDoc.Word.Models.ContentData
   name: ContentData
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html
-  commentId: T:DocumentService.Word.Models.ContentData
-  fullName: DocumentService.Word.Models.ContentData
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html
+  commentId: T:OsmoDoc.Word.Models.ContentData
+  fullName: OsmoDoc.Word.Models.ContentData
   nameWithType: ContentData
-- uid: DocumentService.Word.Models.ContentData.Content
+- uid: OsmoDoc.Word.Models.ContentData.Content
   name: Content
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_Content
-  commentId: P:DocumentService.Word.Models.ContentData.Content
-  fullName: DocumentService.Word.Models.ContentData.Content
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_Content
+  commentId: P:OsmoDoc.Word.Models.ContentData.Content
+  fullName: OsmoDoc.Word.Models.ContentData.Content
   nameWithType: ContentData.Content
-- uid: DocumentService.Word.Models.ContentData.Content*
+- uid: OsmoDoc.Word.Models.ContentData.Content*
   name: Content
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_Content_
-  commentId: Overload:DocumentService.Word.Models.ContentData.Content
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_Content_
+  commentId: Overload:OsmoDoc.Word.Models.ContentData.Content
   isSpec: "True"
-  fullName: DocumentService.Word.Models.ContentData.Content
+  fullName: OsmoDoc.Word.Models.ContentData.Content
   nameWithType: ContentData.Content
-- uid: DocumentService.Word.Models.ContentData.ContentType
+- uid: OsmoDoc.Word.Models.ContentData.ContentType
   name: ContentType
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_ContentType
-  commentId: P:DocumentService.Word.Models.ContentData.ContentType
-  fullName: DocumentService.Word.Models.ContentData.ContentType
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_ContentType
+  commentId: P:OsmoDoc.Word.Models.ContentData.ContentType
+  fullName: OsmoDoc.Word.Models.ContentData.ContentType
   nameWithType: ContentData.ContentType
-- uid: DocumentService.Word.Models.ContentData.ContentType*
+- uid: OsmoDoc.Word.Models.ContentData.ContentType*
   name: ContentType
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_ContentType_
-  commentId: Overload:DocumentService.Word.Models.ContentData.ContentType
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_ContentType_
+  commentId: Overload:OsmoDoc.Word.Models.ContentData.ContentType
   isSpec: "True"
-  fullName: DocumentService.Word.Models.ContentData.ContentType
+  fullName: OsmoDoc.Word.Models.ContentData.ContentType
   nameWithType: ContentData.ContentType
-- uid: DocumentService.Word.Models.ContentData.ParentBody
+- uid: OsmoDoc.Word.Models.ContentData.ParentBody
   name: ParentBody
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_ParentBody
-  commentId: P:DocumentService.Word.Models.ContentData.ParentBody
-  fullName: DocumentService.Word.Models.ContentData.ParentBody
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_ParentBody
+  commentId: P:OsmoDoc.Word.Models.ContentData.ParentBody
+  fullName: OsmoDoc.Word.Models.ContentData.ParentBody
   nameWithType: ContentData.ParentBody
-- uid: DocumentService.Word.Models.ContentData.ParentBody*
+- uid: OsmoDoc.Word.Models.ContentData.ParentBody*
   name: ParentBody
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_ParentBody_
-  commentId: Overload:DocumentService.Word.Models.ContentData.ParentBody
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_ParentBody_
+  commentId: Overload:OsmoDoc.Word.Models.ContentData.ParentBody
   isSpec: "True"
-  fullName: DocumentService.Word.Models.ContentData.ParentBody
+  fullName: OsmoDoc.Word.Models.ContentData.ParentBody
   nameWithType: ContentData.ParentBody
-- uid: DocumentService.Word.Models.ContentData.Placeholder
+- uid: OsmoDoc.Word.Models.ContentData.Placeholder
   name: Placeholder
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_Placeholder
-  commentId: P:DocumentService.Word.Models.ContentData.Placeholder
-  fullName: DocumentService.Word.Models.ContentData.Placeholder
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_Placeholder
+  commentId: P:OsmoDoc.Word.Models.ContentData.Placeholder
+  fullName: OsmoDoc.Word.Models.ContentData.Placeholder
   nameWithType: ContentData.Placeholder
-- uid: DocumentService.Word.Models.ContentData.Placeholder*
+- uid: OsmoDoc.Word.Models.ContentData.Placeholder*
   name: Placeholder
-  href: 10.0.2/api/DocumentService.Word.Models.ContentData.html#DocumentService_Word_Models_ContentData_Placeholder_
-  commentId: Overload:DocumentService.Word.Models.ContentData.Placeholder
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentData.html#OsmoDoc_Word_Models_ContentData_Placeholder_
+  commentId: Overload:OsmoDoc.Word.Models.ContentData.Placeholder
   isSpec: "True"
-  fullName: DocumentService.Word.Models.ContentData.Placeholder
+  fullName: OsmoDoc.Word.Models.ContentData.Placeholder
   nameWithType: ContentData.Placeholder
-- uid: DocumentService.Word.Models.ContentType
+- uid: OsmoDoc.Word.Models.ContentType
   name: ContentType
-  href: 10.0.2/api/DocumentService.Word.Models.ContentType.html
-  commentId: T:DocumentService.Word.Models.ContentType
-  fullName: DocumentService.Word.Models.ContentType
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentType.html
+  commentId: T:OsmoDoc.Word.Models.ContentType
+  fullName: OsmoDoc.Word.Models.ContentType
   nameWithType: ContentType
-- uid: DocumentService.Word.Models.ContentType.Image
+- uid: OsmoDoc.Word.Models.ContentType.Image
   name: Image
-  href: 10.0.2/api/DocumentService.Word.Models.ContentType.html#DocumentService_Word_Models_ContentType_Image
-  commentId: F:DocumentService.Word.Models.ContentType.Image
-  fullName: DocumentService.Word.Models.ContentType.Image
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentType.html#OsmoDoc_Word_Models_ContentType_Image
+  commentId: F:OsmoDoc.Word.Models.ContentType.Image
+  fullName: OsmoDoc.Word.Models.ContentType.Image
   nameWithType: ContentType.Image
-- uid: DocumentService.Word.Models.ContentType.Text
+- uid: OsmoDoc.Word.Models.ContentType.Text
   name: Text
-  href: 10.0.2/api/DocumentService.Word.Models.ContentType.html#DocumentService_Word_Models_ContentType_Text
-  commentId: F:DocumentService.Word.Models.ContentType.Text
-  fullName: DocumentService.Word.Models.ContentType.Text
+  href: 10.0.2/api/OsmoDoc.Word.Models.ContentType.html#OsmoDoc_Word_Models_ContentType_Text
+  commentId: F:OsmoDoc.Word.Models.ContentType.Text
+  fullName: OsmoDoc.Word.Models.ContentType.Text
   nameWithType: ContentType.Text
-- uid: DocumentService.Word.Models.DocumentData
+- uid: OsmoDoc.Word.Models.DocumentData
   name: DocumentData
-  href: 10.0.2/api/DocumentService.Word.Models.DocumentData.html
-  commentId: T:DocumentService.Word.Models.DocumentData
-  fullName: DocumentService.Word.Models.DocumentData
+  href: 10.0.2/api/OsmoDoc.Word.Models.DocumentData.html
+  commentId: T:OsmoDoc.Word.Models.DocumentData
+  fullName: OsmoDoc.Word.Models.DocumentData
   nameWithType: DocumentData
-- uid: DocumentService.Word.Models.DocumentData.Placeholders
+- uid: OsmoDoc.Word.Models.DocumentData.Placeholders
   name: Placeholders
-  href: 10.0.2/api/DocumentService.Word.Models.DocumentData.html#DocumentService_Word_Models_DocumentData_Placeholders
-  commentId: P:DocumentService.Word.Models.DocumentData.Placeholders
-  fullName: DocumentService.Word.Models.DocumentData.Placeholders
+  href: 10.0.2/api/OsmoDoc.Word.Models.DocumentData.html#OsmoDoc_Word_Models_DocumentData_Placeholders
+  commentId: P:OsmoDoc.Word.Models.DocumentData.Placeholders
+  fullName: OsmoDoc.Word.Models.DocumentData.Placeholders
   nameWithType: DocumentData.Placeholders
-- uid: DocumentService.Word.Models.DocumentData.Placeholders*
+- uid: OsmoDoc.Word.Models.DocumentData.Placeholders*
   name: Placeholders
-  href: 10.0.2/api/DocumentService.Word.Models.DocumentData.html#DocumentService_Word_Models_DocumentData_Placeholders_
-  commentId: Overload:DocumentService.Word.Models.DocumentData.Placeholders
+  href: 10.0.2/api/OsmoDoc.Word.Models.DocumentData.html#OsmoDoc_Word_Models_DocumentData_Placeholders_
+  commentId: Overload:OsmoDoc.Word.Models.DocumentData.Placeholders
   isSpec: "True"
-  fullName: DocumentService.Word.Models.DocumentData.Placeholders
+  fullName: OsmoDoc.Word.Models.DocumentData.Placeholders
   nameWithType: DocumentData.Placeholders
-- uid: DocumentService.Word.Models.DocumentData.TablesData
+- uid: OsmoDoc.Word.Models.DocumentData.TablesData
   name: TablesData
-  href: 10.0.2/api/DocumentService.Word.Models.DocumentData.html#DocumentService_Word_Models_DocumentData_TablesData
-  commentId: P:DocumentService.Word.Models.DocumentData.TablesData
-  fullName: DocumentService.Word.Models.DocumentData.TablesData
+  href: 10.0.2/api/OsmoDoc.Word.Models.DocumentData.html#OsmoDoc_Word_Models_DocumentData_TablesData
+  commentId: P:OsmoDoc.Word.Models.DocumentData.TablesData
+  fullName: OsmoDoc.Word.Models.DocumentData.TablesData
   nameWithType: DocumentData.TablesData
-- uid: DocumentService.Word.Models.DocumentData.TablesData*
+- uid: OsmoDoc.Word.Models.DocumentData.TablesData*
   name: TablesData
-  href: 10.0.2/api/DocumentService.Word.Models.DocumentData.html#DocumentService_Word_Models_DocumentData_TablesData_
-  commentId: Overload:DocumentService.Word.Models.DocumentData.TablesData
+  href: 10.0.2/api/OsmoDoc.Word.Models.DocumentData.html#OsmoDoc_Word_Models_DocumentData_TablesData_
+  commentId: Overload:OsmoDoc.Word.Models.DocumentData.TablesData
   isSpec: "True"
-  fullName: DocumentService.Word.Models.DocumentData.TablesData
+  fullName: OsmoDoc.Word.Models.DocumentData.TablesData
   nameWithType: DocumentData.TablesData
-- uid: DocumentService.Word.Models.ParentBody
+- uid: OsmoDoc.Word.Models.ParentBody
   name: ParentBody
-  href: 10.0.2/api/DocumentService.Word.Models.ParentBody.html
-  commentId: T:DocumentService.Word.Models.ParentBody
-  fullName: DocumentService.Word.Models.ParentBody
+  href: 10.0.2/api/OsmoDoc.Word.Models.ParentBody.html
+  commentId: T:OsmoDoc.Word.Models.ParentBody
+  fullName: OsmoDoc.Word.Models.ParentBody
   nameWithType: ParentBody
-- uid: DocumentService.Word.Models.ParentBody.None
+- uid: OsmoDoc.Word.Models.ParentBody.None
   name: None
-  href: 10.0.2/api/DocumentService.Word.Models.ParentBody.html#DocumentService_Word_Models_ParentBody_None
-  commentId: F:DocumentService.Word.Models.ParentBody.None
-  fullName: DocumentService.Word.Models.ParentBody.None
+  href: 10.0.2/api/OsmoDoc.Word.Models.ParentBody.html#OsmoDoc_Word_Models_ParentBody_None
+  commentId: F:OsmoDoc.Word.Models.ParentBody.None
+  fullName: OsmoDoc.Word.Models.ParentBody.None
   nameWithType: ParentBody.None
-- uid: DocumentService.Word.Models.ParentBody.Table
+- uid: OsmoDoc.Word.Models.ParentBody.Table
   name: Table
-  href: 10.0.2/api/DocumentService.Word.Models.ParentBody.html#DocumentService_Word_Models_ParentBody_Table
-  commentId: F:DocumentService.Word.Models.ParentBody.Table
-  fullName: DocumentService.Word.Models.ParentBody.Table
+  href: 10.0.2/api/OsmoDoc.Word.Models.ParentBody.html#OsmoDoc_Word_Models_ParentBody_Table
+  commentId: F:OsmoDoc.Word.Models.ParentBody.Table
+  fullName: OsmoDoc.Word.Models.ParentBody.Table
   nameWithType: ParentBody.Table
-- uid: DocumentService.Word.Models.TableData
+- uid: OsmoDoc.Word.Models.TableData
   name: TableData
-  href: 10.0.2/api/DocumentService.Word.Models.TableData.html
-  commentId: T:DocumentService.Word.Models.TableData
-  fullName: DocumentService.Word.Models.TableData
+  href: 10.0.2/api/OsmoDoc.Word.Models.TableData.html
+  commentId: T:OsmoDoc.Word.Models.TableData
+  fullName: OsmoDoc.Word.Models.TableData
   nameWithType: TableData
-- uid: DocumentService.Word.Models.TableData.Data
+- uid: OsmoDoc.Word.Models.TableData.Data
   name: Data
-  href: 10.0.2/api/DocumentService.Word.Models.TableData.html#DocumentService_Word_Models_TableData_Data
-  commentId: P:DocumentService.Word.Models.TableData.Data
-  fullName: DocumentService.Word.Models.TableData.Data
+  href: 10.0.2/api/OsmoDoc.Word.Models.TableData.html#OsmoDoc_Word_Models_TableData_Data
+  commentId: P:OsmoDoc.Word.Models.TableData.Data
+  fullName: OsmoDoc.Word.Models.TableData.Data
   nameWithType: TableData.Data
-- uid: DocumentService.Word.Models.TableData.Data*
+- uid: OsmoDoc.Word.Models.TableData.Data*
   name: Data
-  href: 10.0.2/api/DocumentService.Word.Models.TableData.html#DocumentService_Word_Models_TableData_Data_
-  commentId: Overload:DocumentService.Word.Models.TableData.Data
+  href: 10.0.2/api/OsmoDoc.Word.Models.TableData.html#OsmoDoc_Word_Models_TableData_Data_
+  commentId: Overload:OsmoDoc.Word.Models.TableData.Data
   isSpec: "True"
-  fullName: DocumentService.Word.Models.TableData.Data
+  fullName: OsmoDoc.Word.Models.TableData.Data
   nameWithType: TableData.Data
-- uid: DocumentService.Word.Models.TableData.TablePos
+- uid: OsmoDoc.Word.Models.TableData.TablePos
   name: TablePos
-  href: 10.0.2/api/DocumentService.Word.Models.TableData.html#DocumentService_Word_Models_TableData_TablePos
-  commentId: P:DocumentService.Word.Models.TableData.TablePos
-  fullName: DocumentService.Word.Models.TableData.TablePos
+  href: 10.0.2/api/OsmoDoc.Word.Models.TableData.html#OsmoDoc_Word_Models_TableData_TablePos
+  commentId: P:OsmoDoc.Word.Models.TableData.TablePos
+  fullName: OsmoDoc.Word.Models.TableData.TablePos
   nameWithType: TableData.TablePos
-- uid: DocumentService.Word.Models.TableData.TablePos*
+- uid: OsmoDoc.Word.Models.TableData.TablePos*
   name: TablePos
-  href: 10.0.2/api/DocumentService.Word.Models.TableData.html#DocumentService_Word_Models_TableData_TablePos_
-  commentId: Overload:DocumentService.Word.Models.TableData.TablePos
+  href: 10.0.2/api/OsmoDoc.Word.Models.TableData.html#OsmoDoc_Word_Models_TableData_TablePos_
+  commentId: Overload:OsmoDoc.Word.Models.TableData.TablePos
   isSpec: "True"
-  fullName: DocumentService.Word.Models.TableData.TablePos
+  fullName: OsmoDoc.Word.Models.TableData.TablePos
   nameWithType: TableData.TablePos
-- uid: DocumentService.Word.WordDocumentGenerator
+- uid: OsmoDoc.Word.WordDocumentGenerator
   name: WordDocumentGenerator
-  href: 10.0.2/api/DocumentService.Word.WordDocumentGenerator.html
-  commentId: T:DocumentService.Word.WordDocumentGenerator
-  fullName: DocumentService.Word.WordDocumentGenerator
+  href: 10.0.2/api/OsmoDoc.Word.WordDocumentGenerator.html
+  commentId: T:OsmoDoc.Word.WordDocumentGenerator
+  fullName: OsmoDoc.Word.WordDocumentGenerator
   nameWithType: WordDocumentGenerator
-- uid: DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate(System.String,DocumentService.Word.Models.DocumentData,System.String)
+- uid: OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate(System.String,OsmoDoc.Word.Models.DocumentData,System.String)
   name: GenerateDocumentByTemplate(string, DocumentData, string)
-  href: 10.0.2/api/DocumentService.Word.WordDocumentGenerator.html#DocumentService_Word_WordDocumentGenerator_GenerateDocumentByTemplate_System_String_DocumentService_Word_Models_DocumentData_System_String_
-  commentId: M:DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate(System.String,DocumentService.Word.Models.DocumentData,System.String)
+  href: 10.0.2/api/OsmoDoc.Word.WordDocumentGenerator.html#OsmoDoc_Word_WordDocumentGenerator_GenerateDocumentByTemplate_System_String_OsmoDoc_Word_Models_DocumentData_System_String_
+  commentId: M:OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate(System.String,OsmoDoc.Word.Models.DocumentData,System.String)
   name.vb: GenerateDocumentByTemplate(String, DocumentData, String)
-  fullName: DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate(string, DocumentService.Word.Models.DocumentData, string)
-  fullName.vb: DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate(String, DocumentService.Word.Models.DocumentData, String)
+  fullName: OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate(string, OsmoDoc.Word.Models.DocumentData, string)
+  fullName.vb: OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate(String, OsmoDoc.Word.Models.DocumentData, String)
   nameWithType: WordDocumentGenerator.GenerateDocumentByTemplate(string, DocumentData, string)
   nameWithType.vb: WordDocumentGenerator.GenerateDocumentByTemplate(String, DocumentData, String)
-- uid: DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate*
+- uid: OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate*
   name: GenerateDocumentByTemplate
-  href: 10.0.2/api/DocumentService.Word.WordDocumentGenerator.html#DocumentService_Word_WordDocumentGenerator_GenerateDocumentByTemplate_
-  commentId: Overload:DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate
+  href: 10.0.2/api/OsmoDoc.Word.WordDocumentGenerator.html#OsmoDoc_Word_WordDocumentGenerator_GenerateDocumentByTemplate_
+  commentId: Overload:OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate
   isSpec: "True"
-  fullName: DocumentService.Word.WordDocumentGenerator.GenerateDocumentByTemplate
+  fullName: OsmoDoc.Word.WordDocumentGenerator.GenerateDocumentByTemplate
   nameWithType: WordDocumentGenerator.GenerateDocumentByTemplate
