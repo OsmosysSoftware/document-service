@@ -1,4 +1,3 @@
-using OsmoDoc.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog.Events;
 using Serilog;
@@ -10,6 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using OsmoDoc.Pdf;
+using StackExchange.Redis;
+using OsmoDoc.API.Models;
+using OsmoDoc.Services;
+using System.IdentityModel.Tokens.Jwt;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,12 @@ OsmoDocPdfConfig.WkhtmltopdfPath = Path.Combine(
     builder.Environment.WebRootPath,
     builder.Configuration.GetSection("STATIC_FILE_PATHS:HTML_TO_PDF_TOOL").Value!
 );
+
+// Register REDIS service
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_URL") ?? throw new Exception("No REDIS URL specified"))
+);
+builder.Services.AddScoped<IRedisTokenStoreService, RedisTokenStoreService>();
 
 // Configure request size limit
 long requestBodySizeLimitBytes = Convert.ToInt64(builder.Configuration.GetSection("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES").Value);
@@ -99,6 +108,21 @@ builder.Services.AddAuthentication(options =>
             }
 
             return true;
+        }
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+            IRedisTokenStoreService tokenStore = context.HttpContext.RequestServices.GetRequiredService<IRedisTokenStoreService>();
+            JwtSecurityToken? token = context.SecurityToken as JwtSecurityToken;
+            string tokenString = context.Request.Headers["Authorization"].ToString().Replace("bearer ", "");
+
+            if (!await tokenStore.IsTokenValidAsync(tokenString))
+            {
+                context.Fail("Token has been revoked.");
+            }
         }
     };
 });
