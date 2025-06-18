@@ -1,4 +1,12 @@
 services:
+  redis:
+    image: redis:7
+    container_name: redis
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT}:6379
+
   osmodoc:
     build:
       context: .
