@@ -90,7 +90,7 @@ public static class WordDocumentGenerator
                     // Populate the table with data if it is passed in tablesData list
                     foreach (TableData insertData in tablesData)
                     {
-                        if (insertData.TablePos <= document.Tables.Count && table == document.Tables[insertData.TablePos - 1])
+                        if (insertData.TablePos >= 1 && insertData.TablePos <= document.Tables.Count && table == document.Tables[insertData.TablePos - 1])
                         {
                             table = PopulateTable(table, insertData);
                         }
@@ -126,11 +126,8 @@ public static class WordDocumentGenerator
     {
         return await Task.Run(() =>
         {
-            using (FileStream readStream = File.OpenRead(docFilePath))
-            {
-                XWPFDocument document = new XWPFDocument(readStream);
-                return document;
-            }
+            FileStream readStream = File.OpenRead(docFilePath);
+            return new XWPFDocument(readStream);
         });
     }
 
