@@ -105,7 +105,7 @@ public class WordController : ControllerBase
             };
 
             // Generate and save output docx in output directory
-            WordDocumentGenerator.GenerateDocumentByTemplate(
+            await WordDocumentGenerator.GenerateDocumentByTemplate(
                 docxTemplateFilePath,
                 documentData,
                 outputFilePath

@@ -10,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace OsmoDoc.Word;
 
@@ -18,13 +20,15 @@ namespace OsmoDoc.Word;
 /// </summary>
 public static class WordDocumentGenerator
 {
+    private static readonly HttpClient _httpClient = new HttpClient();
+    
     /// <summary>
     /// Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.
     /// </summary>
     /// <param name="templateFilePath">The file path of the template document.</param>
     /// <param name="documentData">The data to replace the placeholders in the template.</param>
     /// <param name="outputFilePath">The file path to save the generated document.</param>
-    public static void GenerateDocumentByTemplate(string templateFilePath, DocumentData documentData, string outputFilePath)
+    public async static Task GenerateDocumentByTemplate(string templateFilePath, DocumentData documentData, string outputFilePath)
     {
         try
         {
@@ -41,22 +45,22 @@ public static class WordDocumentGenerator
                 if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Text)
                 {
                     string placeholder = "{" + content.Placeholder + "}";
-                    textPlaceholders.Add(placeholder, content.Content);
+                    textPlaceholders.TryAdd(placeholder, content.Content);
                 }
                 else if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Image)
                 {
                     string placeholder = content.Placeholder;
-                    imagePlaceholders.Add(placeholder, content.Content);
+                    imagePlaceholders.TryAdd(placeholder, content.Content);
                 }
                 else if (content.ParentBody == ParentBody.Table && content.ContentType == ContentType.Text)
                 {
                     string placeholder = "{" + content.Placeholder + "}";
-                    tableContentPlaceholders.Add(placeholder, content.Content);
+                    tableContentPlaceholders.TryAdd(placeholder, content.Content);
                 }
             }
 
             // Create document of the template
-            XWPFDocument document = GetXWPFDocument(templateFilePath);
+            XWPFDocument document = await GetXWPFDocument(templateFilePath);
 
             // For each element in the document
             foreach (IBodyElement element in document.BodyElements)
@@ -95,7 +99,7 @@ public static class WordDocumentGenerator
             }
 
             // Write the document to output file path and close the document
-            WriteDocument(document, outputFilePath);
+            await WriteDocument(document, outputFilePath);
             document.Close();
 
             /*
@@ -105,9 +109,9 @@ public static class WordDocumentGenerator
              * Since both the packages have different execution method, so they are handled separately
              */
             // Replace all the image placeholders in the output file
-            ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
+            await ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -118,12 +122,16 @@ public static class WordDocumentGenerator
     /// </summary>
     /// <param name="docFilePath">The file path of the Word document.</param>
     /// <returns>An instance of XWPFDocument representing the Word document.</returns>
-    private static XWPFDocument GetXWPFDocument(string docFilePath)
+    private async static Task<XWPFDocument> GetXWPFDocument(string docFilePath)
     {
-        FileStream readStream = File.OpenRead(docFilePath);
-        XWPFDocument document = new XWPFDocument(readStream);
-        readStream.Close();
-        return document;
+        return await Task.Run(() =>
+        {
+            using (FileStream readStream = File.OpenRead(docFilePath))
+            {
+                XWPFDocument document = new XWPFDocument(readStream);
+                return document;
+            }
+        });
     }
 
     /// <summary>
@@ -131,12 +139,15 @@ public static class WordDocumentGenerator
     /// </summary>
     /// <param name="document">The XWPFDocument to write.</param>
     /// <param name="filePath">The file path to save the document.</param>
-    private static void WriteDocument(XWPFDocument document, string filePath)
+    private async static Task WriteDocument(XWPFDocument document, string filePath)
     {
-        using (FileStream writeStream = File.Create(filePath))
+        await Task.Run(() =>
         {
-            document.Write(writeStream);
-        }
+            using (FileStream writeStream = File.Create(filePath))
+            {
+                document.Write(writeStream);
+            }
+        });
     }
 
     /// <summary>
@@ -251,59 +262,65 @@ public static class WordDocumentGenerator
     /// <param name="inputFilePath">The input file path containing the image placeholders.</param>
     /// <param name="outputFilePath">The output file path where the updated document will be saved.</param>
     /// <param name="imagePlaceholders">The dictionary of image placeholders and their corresponding image paths.</param>
-    private static void ReplaceImagePlaceholders(string inputFilePath, string outputFilePath, Dictionary<string, string> imagePlaceholders)
+    private async static Task ReplaceImagePlaceholders(string inputFilePath, string outputFilePath, Dictionary<string, string> imagePlaceholders)
     {
-        byte[] docBytes = File.ReadAllBytes(inputFilePath);
+        byte[] docBytes = await File.ReadAllBytesAsync(inputFilePath);
 
-        // Write document bytes to memory
-        MemoryStream memoryStream = new MemoryStream();
-        memoryStream.Write(docBytes, 0, docBytes.Length);
-
-        using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(memoryStream, true))
+        // Write document bytes to memory asynchronously
+        using (MemoryStream memoryStream = new MemoryStream())
         {
-            MainDocumentPart mainDocumentPart = wordDocument.MainDocumentPart;
+            await memoryStream.WriteAsync(docBytes, 0, docBytes.Length);
+            memoryStream.Position = 0;
 
-            // Get a list of drawings (images)
-            IEnumerable<Drawing> drawings = mainDocumentPart.Document.Descendants<Drawing>().ToList();
-
-            /* 
-             * FIXME: Look on how we can improve this loop operation.
-             */
-            foreach (Drawing drawing in drawings)
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(memoryStream, true))
             {
-                DocProperties docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
+                MainDocumentPart? mainDocumentPart = wordDocument.MainDocumentPart;
 
-                // If drawing / image name is present in imagePlaceholders dictionary, then replace image
-                if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
+                // Get a list of drawings (images)
+                IEnumerable<Drawing> drawings = new List<Drawing>();
+                if (mainDocumentPart != null)
                 {
-                    List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
+                    drawings = mainDocumentPart.Document.Descendants<Drawing>().ToList();
+                }
 
-                    foreach (Blip blip in drawingBlips)
+                /* 
+                 * FIXME: Look on how we can improve this loop operation.
+                 */
+                foreach (Drawing drawing in drawings)
+                {
+                    DocProperties? docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
+
+                    // If drawing / image name is present in imagePlaceholders dictionary, then replace image
+                    if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
                     {
-                        OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+                        List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
 
-                        using (BinaryWriter writer = new BinaryWriter(imagePart.GetStream()))
+                        foreach (Blip blip in drawingBlips)
                         {
+                            OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+
                             string imagePath = imagePlaceholders[docProperty.Name];
 
-                            /*
-                             * WebClient has been deprecated and we need to use HTTPClient.
-                             * This involves the methods to be asynchronous.
-                             */
-                            using (WebClient webClient = new WebClient())
+                            // Asynchronously download image data using HttpClient
+                            byte[] imageData = await _httpClient.GetByteArrayAsync(imagePath);
+
+                            using (Stream partStream = imagePart.GetStream(FileMode.OpenOrCreate, FileAccess.Write))
                             {
-                                writer.Write(webClient.DownloadData(imagePath));
+                                // Asynchronously write image data to the part stream
+                                await partStream.WriteAsync(imageData, 0, imageData.Length);
+                                partStream.SetLength(imageData.Length); // Ensure the stream is truncated if new data is smaller
                             }
                         }
                     }
                 }
             }
+            // Overwrite the output file asynchronously
+            using (FileStream fileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))
+            {
+                // Reset MemoryStream position before writing to fileStream
+                memoryStream.Position = 0;
+                await memoryStream.CopyToAsync(fileStream);
+            }
         }
-
-        // Overwrite the output file
-        FileStream fileStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-        memoryStream.WriteTo(fileStream);
-        fileStream.Close();
-        memoryStream.Close();
     }
 }
