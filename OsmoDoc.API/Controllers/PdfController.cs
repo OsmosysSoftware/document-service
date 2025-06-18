@@ -61,7 +61,7 @@ public class PdfController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(outputFilePath);
 
             // Generate and save pdf in output directory
-            PdfDocumentGenerator.GeneratePdf(
+            await PdfDocumentGenerator.GeneratePdf(
                 htmlTemplateFilePath,
                 request.DocumentData.Placeholders,
                 outputFilePath,
@@ -152,7 +152,7 @@ public class PdfController : ControllerBase
             CommonMethodsHelper.CreateDirectoryIfNotExists(outputFilePath);
 
             // Generate and save pdf in output directory
-            PdfDocumentGenerator.GeneratePdf(
+            await PdfDocumentGenerator.GeneratePdf(
                 ejsTemplateFilePath,
                 request.DocumentData?.Placeholders,
                 outputFilePath,
