@@ -22,5 +22,6 @@
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NPOI" Version="2.7.2" />
+		<PackageReference Include="StackExchange.Redis" Version="2.8.41" />
 	</ItemGroup>
 </Project>
