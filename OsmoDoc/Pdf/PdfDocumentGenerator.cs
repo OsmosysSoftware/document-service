@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace OsmoDoc.Pdf;
 
@@ -19,7 +20,7 @@ public class PdfDocumentGenerator
     /// <param name="outputFilePath">The desired output path for the generated PDF file.</param>
     /// <param name="isEjsTemplate">A boolean indicating whether the template is an EJS file.</param>
     /// <param name="serializedEjsDataJson">JSON string containing data for EJS template rendering. Required if isEjsTemplate is true.</param>
-    public static void GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string serializedEjsDataJson)
+    public async static Task GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string? serializedEjsDataJson)
     {
         try
         {
@@ -42,24 +43,24 @@ public class PdfDocumentGenerator
                 }
 
                 // Convert ejs file to an equivalent html
-                templatePath = ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
+                templatePath = await ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
             }
 
             // Modify html template with content data and generate pdf
             string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
-            ConvertHtmlToPdf(OsmoDocPdfConfig.WkhtmltopdfPath, modifiedHtmlFilePath, outputFilePath);
+            await ConvertHtmlToPdf(OsmoDocPdfConfig.WkhtmltopdfPath, modifiedHtmlFilePath, outputFilePath);
 
             if (isEjsTemplate)
             {
                 // If input template was an ejs file, then the template path contains path to html converted from ejs
-                if (Path.GetExtension(templatePath).ToLower() == ".html")
+                if (File.Exists(templatePath) && Path.GetExtension(templatePath).ToLower() == ".html")
                 {
                     // If template path contains path to converted html template then delete it
                     File.Delete(templatePath);
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw;
         }
@@ -74,7 +75,11 @@ public class PdfDocumentGenerator
             htmlContent = htmlContent.Replace($"{{{{{metaData.Placeholder}}}}}", metaData.Content);
         }
 
-        string directoryPath = Path.GetDirectoryName(outputFilePath);
+        string? directoryPath = Path.GetDirectoryName(outputFilePath);
+        if (directoryPath == null)
+        {
+            throw new Exception($"No directory found for the path: {outputFilePath}");
+        }
         string tempHtmlFilePath = Path.Combine(directoryPath, "Modified");
         string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
@@ -87,7 +92,7 @@ public class PdfDocumentGenerator
         return tempHtmlFile;
     }
 
-    private static void ConvertHtmlToPdf(string? wkhtmltopdfPath, string modifiedHtmlFilePath, string outputFilePath)
+    private async static Task ConvertHtmlToPdf(string? wkhtmltopdfPath, string modifiedHtmlFilePath, string outputFilePath)
     {
         string fileName;
         string arguments;
@@ -95,7 +100,7 @@ public class PdfDocumentGenerator
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             fileName = "wkhtmltopdf";
-            arguments = $"{modifiedHtmlFilePath} {outputFilePath}";
+            arguments = $"\"{modifiedHtmlFilePath}\" \"{outputFilePath}\"";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -132,9 +137,9 @@ public class PdfDocumentGenerator
         {
             process.StartInfo = psi;
             process.Start();
-            process.WaitForExit();
-            string output = process.StandardOutput.ReadToEnd();
-            string errors = process.StandardError.ReadToEnd();
+            await process.WaitForExitAsync();
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string errors = await process.StandardError.ReadToEndAsync();
 
             if (process.ExitCode != 0)
             {
@@ -142,13 +147,21 @@ public class PdfDocumentGenerator
             }
         }
 
-        File.Delete(modifiedHtmlFilePath);
+        // Delete the temporary modified HTML file
+        if (File.Exists(modifiedHtmlFilePath))
+        {
+            File.Delete(modifiedHtmlFilePath);
+        }
     }
 
-    private static string ConvertEjsToHTML(string ejsFilePath, string outputFilePath, string ejsDataJson)
+    private async static Task<string> ConvertEjsToHTML(string ejsFilePath, string outputFilePath, string? ejsDataJson)
     {
         // Generate directory
-        string directoryPath = Path.GetDirectoryName(outputFilePath);
+        string? directoryPath = Path.GetDirectoryName(outputFilePath);
+        if (directoryPath == null)
+        {
+            throw new Exception($"No directory found for the path: {outputFilePath}");
+        }
         string tempDirectoryFilePath = Path.Combine(directoryPath, "Temp");
 
         if (!Directory.Exists(tempDirectoryFilePath))
@@ -190,9 +203,9 @@ public class PdfDocumentGenerator
         {
             process.StartInfo = psi;
             process.Start();
-            process.WaitForExit();
-            string output = process.StandardOutput.ReadToEnd();
-            string errors = process.StandardError.ReadToEnd();
+            await process.WaitForExitAsync();
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string errors = await process.StandardError.ReadToEndAsync();
 
             if (process.ExitCode != 0)
             {
@@ -201,7 +214,10 @@ public class PdfDocumentGenerator
         }
 
         // Delete json data file
-        File.Delete(ejsDataJsonFilePath);
+        if (File.Exists(ejsDataJsonFilePath))
+        {
+            File.Delete(ejsDataJsonFilePath);
+        }
 
         return tempHtmlFilePath;
     }
