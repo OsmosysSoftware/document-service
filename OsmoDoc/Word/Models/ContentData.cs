@@ -9,12 +9,12 @@ public class ContentData
     /// <summary>
     /// Gets or sets the placeholder name.
     /// </summary>
-    public string Placeholder { get; set; }
+    public string Placeholder { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the content to replace the placeholder with.
     /// </summary>
-    public string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the content type of the placeholder (text or image).

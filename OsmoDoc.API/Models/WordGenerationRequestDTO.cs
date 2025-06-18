@@ -7,9 +7,9 @@ namespace OsmoDoc.API.Models;
 public class WordGenerationRequestDTO
 {
     [Required(ErrorMessage = "Base64 string for Word template is required")]
-    public string? Base64 { get; set; }
+    public required string Base64 { get; set; }
     [Required(ErrorMessage = "Data to be modified in Word file is required")]
-    public WordDocumentDataRequestDTO? DocumentData { get; set; }
+    public WordDocumentDataRequestDTO DocumentData { get; set; } = new();
 }
 
 public class WordContentDataRequestDTO : ContentData
