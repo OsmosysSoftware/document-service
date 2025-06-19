@@ -300,15 +300,20 @@ public static class WordDocumentGenerator
                     DocProperties? docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
 
                     // If drawing / image name is present in imagePlaceholders dictionary, then replace image
-                    if (docProperty != null && imagePlaceholders.ContainsKey(docProperty.Name))
+                    if (docProperty != null && docProperty.Name != null && imagePlaceholders.ContainsKey(docProperty.Name!))
                     {
                         List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
 
                         foreach (Blip blip in drawingBlips)
                         {
-                            OpenXmlPart imagePart = wordDocument.MainDocumentPart.GetPartById(blip.Embed);
+                            if (blip.Embed == null)
+                            {
+                                continue;
+                            }
 
-                            string imagePath = imagePlaceholders[docProperty.Name];
+                            OpenXmlPart imagePart = mainDocumentPart!.GetPartById(blip.Embed!);
+
+                            string imagePath = imagePlaceholders[docProperty.Name!];
 
                             // Asynchronously download image data using HttpClient
                             using HttpClient httpClient = new HttpClient();

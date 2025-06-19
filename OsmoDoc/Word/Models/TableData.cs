@@ -18,5 +18,5 @@ public class TableData
     /// Each dictionary contains column header-value pairs.
     /// </summary>
 
-    public List<Dictionary<string, string>> Data { get; set; }
+    public List<Dictionary<string, string>> Data { get; set; } = new();
 }

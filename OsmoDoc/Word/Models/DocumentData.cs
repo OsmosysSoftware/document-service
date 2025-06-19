@@ -13,11 +13,11 @@ public class DocumentData
     /// <summary>
     /// Gets or sets the list of content placeholders in the document.
     /// </summary>
-    public List<ContentData> Placeholders { get; set; }
+    public List<ContentData> Placeholders { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the list of table data in the document.
     /// </summary>
 
-    public List<TableData> TablesData { get; set; }
+    public List<TableData> TablesData { get; set; } = new();
 }
