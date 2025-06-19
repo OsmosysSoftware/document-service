@@ -10,19 +10,19 @@ EXPOSE 5000
 ENV BUILD_CONFIGURATION=Debug
 
 # Copy data
-COPY ["DocumentService.API/DocumentService.API.csproj", "DocumentService.API/"]
-COPY ["DocumentService/DocumentService.csproj", "DocumentService/"]
+COPY ["OsmoDoc.API/OsmoDoc.API.csproj", "OsmoDoc.API/"]
+COPY ["OsmoDoc/OsmoDoc.csproj", "OsmoDoc/"]
 
 # Restore the project dependencies
-RUN dotnet restore "./DocumentService.API/./DocumentService.API.csproj"
-RUN dotnet restore "./DocumentService/./DocumentService.csproj"
+RUN dotnet restore "./OsmoDoc.API/./OsmoDoc.API.csproj"
+RUN dotnet restore "./OsmoDoc/./OsmoDoc.csproj"
 
 # Copy the rest of the data
 COPY . .
-WORKDIR "/app/DocumentService.API"
+WORKDIR "/app/OsmoDoc.API"
 
 # Build the project and store artifacts in /out folder
-RUN dotnet publish "./DocumentService.API.csproj" -c BUILD_CONFIGURATION -o /app/out
+RUN dotnet publish "./OsmoDoc.API.csproj" -c BUILD_CONFIGURATION -o /app/out
 
 # Use the official ASP.NET runtime image as the base image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
@@ -45,4 +45,4 @@ RUN chmod 755 /usr/bin/wkhtmltopdf
 RUN npm install -g --only=prod ejs
 
 # Set the entry point for the container
-ENTRYPOINT ["dotnet", "DocumentService.API.dll"]
+ENTRYPOINT ["dotnet", "OsmoDoc.API.dll"]
