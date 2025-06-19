@@ -7,6 +7,7 @@ using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using IOPath = System.IO.Path;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -32,6 +33,16 @@ public static class WordDocumentGenerator
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(templateFilePath))
+            {
+                throw new ArgumentNullException(nameof(templateFilePath));
+            }
+
+            if (string.IsNullOrWhiteSpace(outputFilePath))
+            {
+                throw new ArgumentNullException(nameof(outputFilePath));
+            }
+
             List<ContentData> contentData = documentData.Placeholders;
             List<TableData> tablesData = documentData.TablesData;
 
@@ -138,6 +149,12 @@ public static class WordDocumentGenerator
     /// <param name="filePath">The file path to save the document.</param>
     private async static Task WriteDocument(XWPFDocument document, string filePath)
     {
+        string? directory = IOPath.GetDirectoryName(filePath);
+        if (!string.IsNullOrWhiteSpace(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
         await Task.Run(() =>
         {
             using (FileStream writeStream = File.Create(filePath))

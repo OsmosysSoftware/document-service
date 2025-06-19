@@ -24,6 +24,21 @@ public class PdfDocumentGenerator
     {
         try
         {
+            if (metaDataList is null)
+            {
+                throw new ArgumentNullException(nameof(metaDataList));
+            }
+
+            if (string.IsNullOrWhiteSpace(templatePath))
+            {
+                throw new ArgumentNullException(nameof(templatePath));
+            }
+
+            if (string.IsNullOrWhiteSpace(outputFilePath))
+            {
+                throw new ArgumentNullException(nameof(outputFilePath));
+            }
+
             if (string.IsNullOrWhiteSpace(OsmoDocPdfConfig.WkhtmltopdfPath) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 throw new Exception("WkhtmltopdfPath is not set in OsmoDocPdfConfig.");
@@ -180,7 +195,8 @@ public class PdfDocumentGenerator
 
         // Write json data string to json file
         string ejsDataJsonFilePath = Path.Combine(tempDirectoryFilePath, "ejsData.json");
-        File.WriteAllText(ejsDataJsonFilePath, ejsDataJson);
+        string contentToWrite = ejsDataJson ?? "{}";
+        File.WriteAllText(ejsDataJsonFilePath, contentToWrite);
 
         string commandLine = "cmd.exe";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -243,7 +259,7 @@ public class PdfDocumentGenerator
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return $"{ejsFilePath} -f {ejsDataJsonFilePath} -o {tempHtmlFilePath}";
+            return $"\"{ejsFilePath}\" -f \"{ejsDataJsonFilePath}\" -o \"{tempHtmlFilePath}\"";
         }
         else
         {
