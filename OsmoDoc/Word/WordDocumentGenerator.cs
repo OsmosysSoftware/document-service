@@ -20,7 +20,9 @@ namespace OsmoDoc.Word;
 /// Provides functionality to generate Word documents based on templates and data.
 /// </summary>
 public static class WordDocumentGenerator
-{    
+{
+    private const string PlaceholderPattern = @"{[a-zA-Z]+}";
+    
     /// <summary>
     /// Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.
     /// </summary>
@@ -80,7 +82,7 @@ public static class WordDocumentGenerator
                     XWPFParagraph paragraph = (XWPFParagraph)element;
 
                     // If the paragraph is empty string or the placeholder regex does not match then continue
-                    if (paragraph.ParagraphText == string.Empty || !new Regex(@"{[a-zA-Z]+}").IsMatch(paragraph.ParagraphText))
+                    if (paragraph.ParagraphText == string.Empty || !new Regex(PlaceholderPattern).IsMatch(paragraph.ParagraphText))
                     {
                         continue;
                     }
@@ -166,7 +168,7 @@ public static class WordDocumentGenerator
     private static XWPFParagraph ReplacePlaceholdersOnBody(XWPFParagraph paragraph, Dictionary<string, string> textPlaceholders)
     {
         // Get a list of all placeholders in the current paragraph
-        List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
+        List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, PlaceholderPattern)
                                                                  .Cast<Match>()
                                                                  .Select(s => s.Groups[0].Value).ToList();
 
@@ -201,7 +203,7 @@ public static class WordDocumentGenerator
                 foreach (XWPFParagraph paragraph in cell.Paragraphs)
                 {
                     // Get a list of all placeholders in the current cell
-                    List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, @"{[a-zA-Z]+}")
+                    List<string> placeholdersTobeReplaced = Regex.Matches(paragraph.ParagraphText, PlaceholderPattern)
                                                              .Cast<Match>()
                                                              .Select(s => s.Groups[0].Value).ToList();
 
