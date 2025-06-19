@@ -248,18 +248,20 @@ public static class WordDocumentGenerator
         // For each row's data stored in table data
         foreach (Dictionary<string, string> rowData in tableData.Data)
         {
-            // Create a new row and its columns
-            XWPFTableRow row = table.CreateRow();
-
-            // For each cell in row
-            for (int cellNumber = 0; cellNumber < row.GetTableCells().Count; cellNumber++)
+            XWPFTableRow row = table.CreateRow(); // This is a DATA row, not header
+            
+            int columnCount = headerRow.GetTableCells().Count; // Read from header
+            for (int cellNumber = 0; cellNumber < columnCount; cellNumber++)
             {
+                // Ensure THIS data row has enough cells
+                while (row.GetTableCells().Count <= cellNumber)
+                {
+                    row.AddNewTableCell();
+                }
+
+                // Now populate the cell in this data row
                 XWPFTableCell cell = row.GetCell(cellNumber);
-
-                // Get the column header of this cell
                 string columnHeader = headerRow.GetCell(cellNumber).GetText();
-
-                // Add the cell's value
                 if (rowData.ContainsKey(columnHeader))
                 {
                     cell.SetText(rowData[columnHeader]);
