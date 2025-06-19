@@ -315,9 +315,16 @@ public static class WordDocumentGenerator
 
                             string imagePath = imagePlaceholders[docProperty.Name!];
 
+                            // Validate URL before downloading
+                            if (!Uri.TryCreate(imagePath, UriKind.Absolute, out Uri? tempUri))
+                            {
+                                throw new ArgumentException($"Invalid image URL: {imagePath}");
+                            }
+
                             // Asynchronously download image data using HttpClient
                             using HttpClient httpClient = new HttpClient();
-                            byte[] imageData = await httpClient.GetByteArrayAsync(imagePath);
+                            Uri imageUri = tempUri!;
+                            byte[] imageData = await httpClient.GetByteArrayAsync(imageUri);
 
                             using (Stream partStream = imagePart.GetStream(FileMode.OpenOrCreate, FileAccess.Write))
                             {
