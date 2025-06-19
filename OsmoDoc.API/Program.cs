@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
+using OsmoDoc.Pdf;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,12 @@ builder.Services.AddControllers(options => options.Filters.Add(new ProducesAttri
 string root = Directory.GetCurrentDirectory();
 string dotenv = Path.GetFullPath(Path.Combine(root, "..", ".env"));
 OsmoDoc.API.DotEnv.Load(dotenv);
+
+// Initialize PDF tool path once at startup
+OsmoDocPdfConfig.WkhtmltopdfPath = Path.Combine(
+    builder.Environment.WebRootPath,
+    builder.Configuration.GetSection("STATIC_FILE_PATHS:HTML_TO_PDF_TOOL").Value!
+);
 
 // Configure request size limit
 long requestBodySizeLimitBytes = Convert.ToInt64(builder.Configuration.GetSection("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES").Value);
