@@ -30,12 +30,29 @@ public class PdfController : ControllerBase
 
         try
         {
+            if (request == null)
+            {
+                throw new BadHttpRequestException("Request body cannot be null");
+            }
+            
+            string tempPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:TEMP is missing.");
+            string inputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value
+                               ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:INPUT is missing.");
+            string htmlPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:HTML").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:HTML is missing.");
+            string outputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value
+                                ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:OUTPUT is missing.");
+            string pdfPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value
+                             ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:PDF is missing.");
+
+
             // Generate filepath to save base64 html template
             string htmlTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:HTML").Value,
+                tempPath,
+                inputPath,
+                htmlPath,
                 CommonMethodsHelper.GenerateRandomFileName("html")
             );
 
@@ -46,9 +63,9 @@ public class PdfController : ControllerBase
 
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value,
+                tempPath,
+                outputPath,
+                pdfPath,
                 CommonMethodsHelper.GenerateRandomFileName("pdf")
             );
 
@@ -115,12 +132,23 @@ public class PdfController : ControllerBase
 
         try
         {
+            string tempPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:TEMP is missing.");
+            string inputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value
+                               ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:INPUT is missing.");
+            string ejsPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:EJS").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:EJS is missing.");
+            string outputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value
+                                ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:OUTPUT is missing.");
+            string pdfPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value
+                             ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:PDF is missing.");
+
             // Generate filepath to save base64 html template
             string ejsTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:EJS").Value,
+                tempPath,
+                inputPath,
+                ejsPath,
                 CommonMethodsHelper.GenerateRandomFileName("ejs")
             );
 
@@ -131,9 +159,9 @@ public class PdfController : ControllerBase
 
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:PDF").Value,
+                tempPath,
+                inputPath,
+                pdfPath,
                 CommonMethodsHelper.GenerateRandomFileName("pdf")
             );
 
@@ -142,7 +170,7 @@ public class PdfController : ControllerBase
             // Generate and save pdf in output directory
             await PdfDocumentGenerator.GeneratePdf(
                 ejsTemplateFilePath,
-                request.DocumentData?.Placeholders,
+                request.DocumentData.Placeholders,
                 outputFilePath,
                 isEjsTemplate: true,
                 serializedEjsDataJson: request.SerializedEjsDataJson

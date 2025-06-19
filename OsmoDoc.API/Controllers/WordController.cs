@@ -34,12 +34,34 @@ public class WordController : ControllerBase
 
         try
         {
+            if (request == null)
+            {
+                throw new BadHttpRequestException("Request body cannot be null");
+            }
+
+            if (request.DocumentData == null)
+            {
+                throw new BadHttpRequestException("Document data is required");
+            }
+
+            string tempPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:TEMP is missing.");
+            string inputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value
+                               ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:INPUT is missing.");
+            string wordPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value
+                              ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:WORD is missing.");
+            string outputPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value
+                                ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:OUTPUT is missing.");
+            string imagesPath = this._configuration.GetSection("TEMPORARY_FILE_PATHS:IMAGES").Value
+                                ?? throw new InvalidOperationException("Configuration TEMPORARY_FILE_PATHS:IMAGES is missing.");
+
+
             // Generate filepath to save base64 docx template
             string docxTemplateFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
+                tempPath,
+                inputPath,
+                wordPath,
                 CommonMethodsHelper.GenerateRandomFileName("docx")
             );
 
@@ -51,9 +73,9 @@ public class WordController : ControllerBase
             // Initialize output filepath
             string outputFilePath = Path.Combine(
                 this._hostingEnvironment.WebRootPath,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:OUTPUT").Value,
-                this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
+                tempPath,
+                outputPath,
+                wordPath,
                 CommonMethodsHelper.GenerateRandomFileName("docx")
             );
 
@@ -80,10 +102,10 @@ public class WordController : ControllerBase
                     // Generate a random image file name and its path
                     string imageFilePath = Path.Combine(
                         this._hostingEnvironment.WebRootPath,
-                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:TEMP").Value,
-                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:INPUT").Value,
-                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:WORD").Value,
-                        this._configuration.GetSection("TEMPORARY_FILE_PATHS:IMAGES").Value,
+                        tempPath,
+                        inputPath,
+                        wordPath,
+                        imagesPath,
                         CommonMethodsHelper.GenerateRandomFileName(placeholder.ImageExtension)
                     );
 
