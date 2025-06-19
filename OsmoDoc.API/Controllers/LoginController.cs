@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using OsmoDoc.API.Models;
 using OsmoDoc.API.Helpers;
-using Microsoft.AspNetCore.Authorization;
+using OsmoDoc.Services;
 
 namespace OsmoDoc.API.Controllers;
 
@@ -9,26 +10,52 @@ namespace OsmoDoc.API.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
+    private readonly IRedisTokenStoreService _tokenStoreSerivce;
     private readonly ILogger<LoginController> _logger;
 
-    public LoginController(ILogger<LoginController> logger)
+    public LoginController(IRedisTokenStoreService tokenStoreService, ILogger<LoginController> logger)
     {
+        this._tokenStoreSerivce = tokenStoreService;
         this._logger = logger;
     }
 
     [HttpPost]
     [Route("login")]
     [AllowAnonymous]
-    public ActionResult<BaseResponse> Login([FromBody] LoginRequestDTO loginRequest)
+    public async Task<ActionResult<BaseResponse>> Login([FromBody] LoginRequestDTO loginRequest)
     {
         BaseResponse response = new BaseResponse(ResponseStatus.Fail);
         try
         {
             string token = AuthenticationHelper.JwtTokenGenerator(loginRequest.Email);
+            await this._tokenStoreSerivce.StoreTokenAsync(token, loginRequest.Email);
 
             response.Status = ResponseStatus.Success;
             response.AuthToken = token;
             response.Message = "Token generated successfully";
+            return this.Ok(response);
+        }
+        catch (Exception ex)
+        {
+            response.Status = ResponseStatus.Error;
+            response.Message = ex.Message;
+            this._logger.LogError(ex.Message);
+            this._logger.LogError(ex.StackTrace);
+            return this.StatusCode(StatusCodes.Status500InternalServerError, response);
+        }
+    }
+
+    [HttpPost]
+    [Route("revoke")]
+    public async Task<ActionResult<BaseResponse>> RevokeToken([FromBody] RevokeTokenRequestDTO request)
+    {
+        BaseResponse response = new BaseResponse(ResponseStatus.Fail);
+        try
+        {
+            await this._tokenStoreSerivce.RevokeTokenAsync(request.Token);
+
+            response.Status = ResponseStatus.Success;
+            response.Message = "Token revoked";
             return this.Ok(response);
         }
         catch (Exception ex)
