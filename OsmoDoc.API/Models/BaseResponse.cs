@@ -23,11 +23,16 @@ public class ModelValidationBadRequest
 {
     public static BadRequestObjectResult ModelValidationErrorResponse(ActionContext actionContext)
     {
-        return new BadRequestObjectResult(actionContext.ModelState
-            .Where(modelError => modelError.Value.Errors.Any())
-            .Select(modelError => new BaseResponse(ResponseStatus.Error)
-            {
-                Message = modelError.Value.Errors.FirstOrDefault().ErrorMessage
-            }).FirstOrDefault());
+        string? firstError = actionContext.ModelState
+            .Where(ms => ms.Value != null && ms.Value.Errors.Any())
+            .Select(ms => ms.Value!.Errors.FirstOrDefault()?.ErrorMessage)
+            .FirstOrDefault(msg => !string.IsNullOrWhiteSpace(msg));
+
+        BaseResponse response = new BaseResponse(ResponseStatus.Error)
+        {
+            Message = firstError ?? "Validation failed"
+        };
+        
+        return new BadRequestObjectResult(response);
     }
 }
