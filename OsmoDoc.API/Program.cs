@@ -41,8 +41,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(
 );
 builder.Services.AddScoped<IRedisTokenStoreService, RedisTokenStoreService>();
 
-// Configure request size limit
-long requestBodySizeLimitBytes = Convert.ToInt64(builder.Configuration.GetSection("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES").Value);
+// Configure request size limit (50 MB default)
+long requestBodySizeLimitBytes = builder.Configuration.GetValue<long>("CONFIG:REQUEST_BODY_SIZE_LIMIT_BYTES", 50 * 1024 * 1024);
 
 // Configure request size for Kestrel server - ASP.NET Core project templates use Kestrel by default when not hosted with IIS
 builder.Services.Configure<KestrelServerOptions>(options =>
