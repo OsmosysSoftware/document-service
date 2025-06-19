@@ -20,9 +20,7 @@ namespace OsmoDoc.Word;
 /// Provides functionality to generate Word documents based on templates and data.
 /// </summary>
 public static class WordDocumentGenerator
-{
-    private static readonly HttpClient _httpClient = new HttpClient();
-    
+{    
     /// <summary>
     /// Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.
     /// </summary>
@@ -110,7 +108,7 @@ public static class WordDocumentGenerator
             }
 
             // Write the document to output file path and close the document
-            await WriteDocument(document, outputFilePath);
+            WriteDocument(document, outputFilePath);
             document.Close();
 
             /*
@@ -135,11 +133,9 @@ public static class WordDocumentGenerator
     /// <returns>An instance of XWPFDocument representing the Word document.</returns>
     private async static Task<XWPFDocument> GetXWPFDocument(string docFilePath)
     {
-        return await Task.Run(() =>
-        {
-            FileStream readStream = File.OpenRead(docFilePath);
-            return new XWPFDocument(readStream);
-        });
+        byte[] fileBytes = await File.ReadAllBytesAsync(docFilePath);
+        using MemoryStream memoryStream = new MemoryStream(fileBytes);
+        return new XWPFDocument(memoryStream);
     }
 
     /// <summary>
@@ -147,21 +143,18 @@ public static class WordDocumentGenerator
     /// </summary>
     /// <param name="document">The XWPFDocument to write.</param>
     /// <param name="filePath">The file path to save the document.</param>
-    private async static Task WriteDocument(XWPFDocument document, string filePath)
+    private static void WriteDocument(XWPFDocument document, string filePath)
     {
         string? directory = IOPath.GetDirectoryName(filePath);
         if (!string.IsNullOrWhiteSpace(directory))
         {
             Directory.CreateDirectory(directory);
         }
-        
-        await Task.Run(() =>
+
+        using (FileStream writeStream = File.Create(filePath))
         {
-            using (FileStream writeStream = File.Create(filePath))
-            {
-                document.Write(writeStream);
-            }
-        });
+            document.Write(writeStream);
+        }
     }
 
     /// <summary>
@@ -318,7 +311,8 @@ public static class WordDocumentGenerator
                             string imagePath = imagePlaceholders[docProperty.Name];
 
                             // Asynchronously download image data using HttpClient
-                            byte[] imageData = await _httpClient.GetByteArrayAsync(imagePath);
+                            using HttpClient httpClient = new HttpClient();
+                            byte[] imageData = await httpClient.GetByteArrayAsync(imagePath);
 
                             using (Stream partStream = imagePart.GetStream(FileMode.OpenOrCreate, FileAccess.Write))
                             {
