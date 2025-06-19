@@ -95,7 +95,8 @@ public class PdfDocumentGenerator
         {
             throw new Exception($"No directory found for the path: {outputFilePath}");
         }
-        string tempHtmlFilePath = Path.Combine(directoryPath, "Modified");
+        string uniqueId = Guid.NewGuid().ToString("N");
+        string tempHtmlFilePath = Path.Combine(directoryPath, $"Modified_{uniqueId}");
         string tempHtmlFile = Path.Combine(tempHtmlFilePath, "modifiedHtml.html");
 
         if (!Directory.Exists(tempHtmlFilePath))
@@ -177,7 +178,8 @@ public class PdfDocumentGenerator
         {
             throw new Exception($"No directory found for the path: {outputFilePath}");
         }
-        string tempDirectoryFilePath = Path.Combine(directoryPath, "Temp");
+        string uniqueId = Guid.NewGuid().ToString("N");
+        string tempDirectoryFilePath = Path.Combine(directoryPath, $"Temp_{uniqueId}");
 
         if (!Directory.Exists(tempDirectoryFilePath))
         {
