@@ -1,5 +1,5 @@
-# Contributing to DocumentService
-Welcome to the document-service project! We appreciate your interest in contributing to the project and making it even better. As a contributor, 
+# Contributing to OsmoDoc
+Welcome to the osmodoc project! We appreciate your interest in contributing to the project and making it even better. As a contributor, 
 please follow the guidelines outlined below:
 
 ## Table of contents
@@ -13,8 +13,8 @@ please follow the guidelines outlined below:
 ## Got a question or problem?
 
 **If you have questions or encounter problems, please refrain from opening issues for general support questions**. GitHub issues are primarily for bug 
-reports and feature requests. For general questions and support, consider using [Stack Overflow](https://stackoverflow.com/questions/tagged/document-service) 
-and tag your questions with the `document-service` tag. Here's why Stack Overflow is a preferred platform:
+reports and feature requests. For general questions and support, consider using [Stack Overflow](https://stackoverflow.com/questions/tagged/osmodoc) 
+and tag your questions with the `osmodoc` tag. Here's why Stack Overflow is a preferred platform:
 
 	- Questions and answers are publicly available, helping others.
 	- The voting system on Stack Overflow highlights the best answers.
@@ -23,8 +23,8 @@ To save time for both you and us, we will close issues related to general suppor
 
 ## Found any issues and bugs
 
-If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/OsmosysSoftware/document-service/issues/new) 
-to our GitHub Repository. Even better, you can submit a [pull request](https://github.com/OsmosysSoftware/document-service/pulls) with a fix.
+If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/OsmosysSoftware/osmodoc/issues/new) 
+to our GitHub Repository. Even better, you can submit a [pull request](https://github.com/OsmosysSoftware/osmodoc/pulls) with a fix.
 
 ## Submission guidelines
 
@@ -34,19 +34,19 @@ Before you submit an issue, please check the issue tracker to see if a similar i
 
 For us to address and fix a bug, we need to reproduce it. Thus when submitting a bug report, we will ask for a minimal reproduction scenario using a repository or [Gist](https://gist.github.com/). Providing a live, reproducible scenario helps us understand the issue better. Information to include:
 
-- The version of the document-service you are using.
+- The version of the osmodoc you are using.
 - Any third-party libraries and their versions.
 - A use-case that demonstrates the issue.
 
 Without a minimal reproduction, we may need to close the issue due to insufficient information.
 
-You can file new issues using our [new issue form](https://github.com/OsmosysSoftware/document-service/issues/new).
+You can file new issues using our [new issue form](https://github.com/OsmosysSoftware/osmodoc/issues/new).
 
 ### Submitting a pull request (PR)
 
 Before submitting a Pull Request (PR), please follow these guidelines:
 
-1. Search GitHub [pull requests](https://github.com/OsmosysSoftware/document-service/pulls) to ensure there is no open or closed PR 
+1. Search GitHub [pull requests](https://github.com/OsmosysSoftware/osmodoc/pulls) to ensure there is no open or closed PR 
    related to your submission.
 2. Fork this repository.
 3. Make your changes in a new Git branch.
@@ -63,12 +63,12 @@ Before submitting a Pull Request (PR), please follow these guidelines:
    ```shell
    git push origin my-fix-branch
    ```
-7. Send a pull request to the `document-service:main`.
+7. Send a pull request to the `osmodoc:main`.
 
-- <strong style="color:black">•</strong> **If we suggest changes, then:**
-  - • Make the required updates.
-  - • Ensure that your changes do not break existing functionality or introduce new issues.
-  - • Rebase your branch and force push to your GitHub repository. This will update your Pull Request.
+- <strong style="color:black">ï¿½</strong> **If we suggest changes, then:**
+  - ï¿½ Make the required updates.
+  - ï¿½ Ensure that your changes do not break existing functionality or introduce new issues.
+  - ï¿½ Rebase your branch and force push to your GitHub repository. This will update your Pull Request.
 
   That's it! Thank you for your contribution!
 
@@ -90,7 +90,7 @@ To ensure consistency throughout the source code, follow these rules as you work
 ## Commit message guidelines
 
 In this project, we have specific rules for formatting our Git commit messages. These guidelines result in more readable messages that are easy 
-to follow when reviewing the project's history. Additionally, we use these commit messages to **generate the document-service change log**.
+to follow when reviewing the project's history. Additionally, we use these commit messages to **generate the osmodoc change log**.
 
 ### Commit message format
 
@@ -110,7 +110,7 @@ on GitHub as well as in various git tools.
 
 Footer should contain a [closing reference to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if any.
 
-Samples: (even more [samples](https://github.com/OsmosysSoftware/document-service/commits/main))
+Samples: (even more [samples](https://github.com/OsmosysSoftware/osmodoc/commits/main))
 `docs: update change log to beta.5`
 `fix: need to depend on latest rxjs and zone.js`
 
