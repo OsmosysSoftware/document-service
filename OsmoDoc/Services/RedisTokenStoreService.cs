@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -15,21 +16,27 @@ public class RedisTokenStoreService : IRedisTokenStoreService
         this._db = redis.GetDatabase();
     }
 
-    public Task StoreTokenAsync(string token, string email)
+    public Task StoreTokenAsync(string token, string email, CancellationToken cancellationToken = default)
     {
-        return this._db.StringSetAsync($"{KeyPrefix}{token}", JsonConvert.SerializeObject(new {
+        // Check if operation was cancelled before starting
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return this._db.StringSetAsync($"{KeyPrefix}{token}", JsonConvert.SerializeObject(new
+        {
             issuedTo = email,
             issuedAt = DateTime.UtcNow
         }));
     }
 
-    public Task<bool> IsTokenValidAsync(string token)
+    public Task<bool> IsTokenValidAsync(string token, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         return this._db.KeyExistsAsync($"{KeyPrefix}{token}");
     }
 
-    public Task RevokeTokenAsync(string token)
+    public Task RevokeTokenAsync(string token, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         return this._db.KeyDeleteAsync($"{KeyPrefix}{token}");
     }
 }

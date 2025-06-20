@@ -125,7 +125,7 @@ builder.Services.AddAuthentication(options =>
                 tokenString = authHeader.ToString().Substring("Bearer ".Length).Trim();
             }
 
-            if (!await tokenStore.IsTokenValidAsync(tokenString))
+            if (!await tokenStore.IsTokenValidAsync(tokenString, context.HttpContext.RequestAborted))
             {
                 context.Fail("Token has been revoked.");
             }

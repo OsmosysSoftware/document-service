@@ -28,7 +28,7 @@ public class LoginController : ControllerBase
         try
         {
             string token = AuthenticationHelper.JwtTokenGenerator(loginRequest.Email);
-            await this._tokenStoreSerivce.StoreTokenAsync(token, loginRequest.Email);
+            await this._tokenStoreSerivce.StoreTokenAsync(token, loginRequest.Email, this.HttpContext.RequestAborted);
 
             response.Status = ResponseStatus.Success;
             response.AuthToken = token;
@@ -52,7 +52,7 @@ public class LoginController : ControllerBase
         BaseResponse response = new BaseResponse(ResponseStatus.Fail);
         try
         {
-            await this._tokenStoreSerivce.RevokeTokenAsync(request.Token);
+            await this._tokenStoreSerivce.RevokeTokenAsync(request.Token, this.HttpContext.RequestAborted);
 
             response.Status = ResponseStatus.Success;
             response.Message = "Token revoked";
