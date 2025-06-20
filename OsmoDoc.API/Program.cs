@@ -117,7 +117,13 @@ builder.Services.AddAuthentication(options =>
         {
             IRedisTokenStoreService tokenStore = context.HttpContext.RequestServices.GetRequiredService<IRedisTokenStoreService>();
             JwtSecurityToken? token = context.SecurityToken as JwtSecurityToken;
-            string tokenString = context.Request.Headers["Authorization"].ToString().Replace("bearer ", "");
+            string tokenString = string.Empty;
+
+            if (context.Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues authHeader) &&
+                authHeader.ToString().StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                tokenString = authHeader.ToString().Substring("Bearer ".Length).Trim();
+            }
 
             if (!await tokenStore.IsTokenValidAsync(tokenString))
             {
