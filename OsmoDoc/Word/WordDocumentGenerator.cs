@@ -13,6 +13,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Diagnostics;
 
 namespace OsmoDoc.Word;
 
@@ -22,7 +23,7 @@ namespace OsmoDoc.Word;
 public static class WordDocumentGenerator
 {
     private const string PlaceholderPattern = @"{[a-zA-Z]+}";
-    
+
     /// <summary>
     /// Generates a Word document based on a template, replaces placeholders with data, and saves it to the specified output file path.
     /// </summary>
@@ -55,11 +56,6 @@ public static class WordDocumentGenerator
             {
                 string placeholder = "{" + content.Placeholder + "}";
                 textPlaceholders.TryAdd(placeholder, content.Content);
-            }
-            else if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Image)
-            {
-                string placeholder = content.Placeholder;
-                imagePlaceholders.TryAdd(placeholder, content.Content);
             }
             else if (content.ParentBody == ParentBody.Table && content.ContentType == ContentType.Text)
             {
@@ -118,7 +114,7 @@ public static class WordDocumentGenerator
             * Since both the packages have different execution method, so they are handled separately
             */
         // Replace all the image placeholders in the output file
-        await ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
+        await ProcessImagePlaceholders(outputFilePath, documentData.Images);
     }
 
     /// <summary>
@@ -237,7 +233,7 @@ public static class WordDocumentGenerator
         foreach (Dictionary<string, string> rowData in tableData.Data)
         {
             XWPFTableRow row = table.CreateRow(); // This is a DATA row, not header
-            
+
             int columnCount = headerRow.GetTableCells().Count; // Read from header
             for (int cellNumber = 0; cellNumber < columnCount; cellNumber++)
             {
@@ -263,81 +259,135 @@ public static class WordDocumentGenerator
     /// <summary>
     /// Replaces the image placeholders in the output file with the specified images.
     /// </summary>
-    /// <param name="inputFilePath">The input file path containing the image placeholders.</param>
-    /// <param name="outputFilePath">The output file path where the updated document will be saved.</param>
-    /// <param name="imagePlaceholders">The dictionary of image placeholders and their corresponding image paths.</param>
-    private async static Task ReplaceImagePlaceholders(string inputFilePath, string outputFilePath, Dictionary<string, string> imagePlaceholders)
+    /// <param name="documentPath">The ile path where the updated document will be saved.</param>
+    /// <param name="images">The data structure for holding the images details.</param>
+    
+    private static async Task ProcessImagePlaceholders(
+        string documentPath,
+        List<ImageData> images)
     {
-        byte[] docBytes = await File.ReadAllBytesAsync(inputFilePath);
-
-        // Write document bytes to memory asynchronously
-        using (MemoryStream memoryStream = new MemoryStream())
+        if (images == null || !images.Any())
         {
-            await memoryStream.WriteAsync(docBytes, 0, docBytes.Length);
-            memoryStream.Position = 0;
+            return;
+        }
 
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(memoryStream, true))
+        List<string> tempFiles = new List<string>();
+
+        try
+        {
+            byte[] docBytes = await File.ReadAllBytesAsync(documentPath);
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                MainDocumentPart? mainDocumentPart = wordDocument.MainDocumentPart;
+                await memoryStream.WriteAsync(docBytes);
+                memoryStream.Position = 0;
 
-                // Get a list of drawings (images)
-                IEnumerable<Drawing> drawings = new List<Drawing>();
-                if (mainDocumentPart != null)
+                using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(memoryStream, true))
                 {
-                    drawings = mainDocumentPart.Document.Descendants<Drawing>().ToList();
-                }
-
-                /* 
-                 * FIXME: Look on how we can improve this loop operation.
-                 */
-                foreach (Drawing drawing in drawings)
-                {
-                    DocProperties? docProperty = drawing.Descendants<DocProperties>().FirstOrDefault();
-
-                    // If drawing / image name is present in imagePlaceholders dictionary, then replace image
-                    if (docProperty != null && docProperty.Name != null && imagePlaceholders.ContainsKey(docProperty.Name!))
+                    MainDocumentPart? mainPart = wordDocument.MainDocumentPart;
+                    if (mainPart == null)
                     {
-                        List<Blip> drawingBlips = drawing.Descendants<Blip>().ToList();
+                        return;
+                    }
 
-                        foreach (Blip blip in drawingBlips)
+                    List<Drawing> drawings = mainPart.Document.Descendants<Drawing>().ToList();
+
+                    foreach (ImageData img in images)
+                    {
+                        try
                         {
-                            if (blip.Embed == null)
+                            string tempFilePath = await PrepareImageFile(img);
+                            tempFiles.Add(tempFilePath);
+
+                            Drawing? drawing = drawings.FirstOrDefault(d =>
+                                d.Descendants<DocProperties>()
+                                 .Any(dp => dp.Name == img.PlaceholderName));
+
+                            if (drawing == null)
                             {
                                 continue;
                             }
 
-                            OpenXmlPart imagePart = mainDocumentPart!.GetPartById(blip.Embed!);
-
-                            string imagePath = imagePlaceholders[docProperty.Name!];
-
-                            // Validate URL before downloading
-                            if (!Uri.TryCreate(imagePath, UriKind.Absolute, out Uri? tempUri))
+                            foreach (Blip blip in drawing.Descendants<Blip>())
                             {
-                                throw new ArgumentException($"Invalid image URL: {imagePath}");
-                            }
+                                if (blip.Embed?.Value == null)
+                                {
+                                    continue;
+                                }
 
-                            // Asynchronously download image data using HttpClient
-                            using HttpClient httpClient = new HttpClient();
-                            Uri imageUri = tempUri!;
-                            byte[] imageData = await httpClient.GetByteArrayAsync(imageUri);
-
-                            using (Stream partStream = imagePart.GetStream(FileMode.OpenOrCreate, FileAccess.Write))
-                            {
-                                // Asynchronously write image data to the part stream
-                                await partStream.WriteAsync(imageData, 0, imageData.Length);
-                                partStream.SetLength(imageData.Length); // Ensure the stream is truncated if new data is smaller
+                                OpenXmlPart imagePart = mainPart.GetPartById(blip.Embed!);
+                                using (Stream partStream = imagePart.GetStream(FileMode.Create))
+                                {
+                                    await using FileStream fileStream = File.OpenRead(tempFilePath);
+                                    await fileStream.CopyToAsync(partStream);
+                                }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error but continue with other images
+                            Debug.WriteLine($"Failed to process image {img.PlaceholderName}: {ex.Message}");
                         }
                     }
                 }
-            }
-            // Overwrite the output file asynchronously
-            using (FileStream fileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))
-            {
-                // Reset MemoryStream position before writing to fileStream
+
+                // Save the modified document
                 memoryStream.Position = 0;
-                await memoryStream.CopyToAsync(fileStream);
+                using (FileStream fileStream = new FileStream(documentPath, FileMode.Create))
+                {
+                    await memoryStream.CopyToAsync(fileStream);
+                }
             }
         }
+        finally
+        {
+            // Clean up temp files
+            foreach (string file in tempFiles)
+            {
+                try { File.Delete(file); }
+                catch { /* Ignore cleanup errors */ }
+            }
+        }
+    }
+
+    private static async Task<string> PrepareImageFile(ImageData imageData)
+    {
+        string tempFilePath = System.IO.Path.GetTempFileName();
+        
+        if (!string.IsNullOrEmpty(imageData.ImageExtension))
+        {
+            tempFilePath = System.IO.Path.ChangeExtension(tempFilePath, imageData.ImageExtension);
+        }
+
+        switch (imageData.SourceType)
+        {
+            case ImageSourceType.Base64:
+                await File.WriteAllBytesAsync(
+                    tempFilePath, 
+                    Convert.FromBase64String(imageData.Data));
+                break;
+                
+            case ImageSourceType.LocalFile:
+                if (!File.Exists(imageData.Data))
+                {
+                    throw new FileNotFoundException("Image file not found", imageData.Data);
+                }
+
+                File.Copy(imageData.Data, tempFilePath, true);
+                break;
+                
+            case ImageSourceType.Url:
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    byte[] bytes = await httpClient.GetByteArrayAsync(imageData.Data);
+                    await File.WriteAllBytesAsync(tempFilePath, bytes);
+                }
+                break;
+                
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        return tempFilePath;
     }
 }
