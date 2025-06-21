@@ -10,12 +10,12 @@ namespace OsmoDoc.API.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
-    private readonly IRedisTokenStoreService _tokenStoreSerivce;
+    private readonly IRedisTokenStoreService _tokenStoreService;
     private readonly ILogger<LoginController> _logger;
 
     public LoginController(IRedisTokenStoreService tokenStoreService, ILogger<LoginController> logger)
     {
-        this._tokenStoreSerivce = tokenStoreService;
+        this._tokenStoreService = tokenStoreService;
         this._logger = logger;
     }
 
@@ -28,7 +28,7 @@ public class LoginController : ControllerBase
         try
         {
             string token = AuthenticationHelper.JwtTokenGenerator(loginRequest.Email);
-            await this._tokenStoreSerivce.StoreTokenAsync(token, loginRequest.Email, this.HttpContext.RequestAborted);
+            await this._tokenStoreService.StoreTokenAsync(token, loginRequest.Email, this.HttpContext.RequestAborted);
 
             response.Status = ResponseStatus.Success;
             response.AuthToken = token;
@@ -52,7 +52,7 @@ public class LoginController : ControllerBase
         BaseResponse response = new BaseResponse(ResponseStatus.Fail);
         try
         {
-            await this._tokenStoreSerivce.RevokeTokenAsync(request.Token, this.HttpContext.RequestAborted);
+            await this._tokenStoreService.RevokeTokenAsync(request.Token, this.HttpContext.RequestAborted);
 
             response.Status = ResponseStatus.Success;
             response.Message = "Token revoked";
