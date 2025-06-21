@@ -22,62 +22,55 @@ public class PdfDocumentGenerator
     /// <param name="serializedEjsDataJson">JSON string containing data for EJS template rendering. Required if isEjsTemplate is true.</param>
     public async static Task GeneratePdf(string templatePath, List<ContentMetaData> metaDataList, string outputFilePath, bool isEjsTemplate, string? serializedEjsDataJson)
     {
-        try
+        if (metaDataList is null)
         {
-            if (metaDataList is null)
-            {
-                throw new ArgumentNullException(nameof(metaDataList));
-            }
-
-            if (string.IsNullOrWhiteSpace(templatePath))
-            {
-                throw new ArgumentNullException(nameof(templatePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(outputFilePath))
-            {
-                throw new ArgumentNullException(nameof(outputFilePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(OsmoDocPdfConfig.WkhtmltopdfPath) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                throw new Exception("WkhtmltopdfPath is not set in OsmoDocPdfConfig.");
-            }
-
-            if (!File.Exists(templatePath))
-            {
-                throw new Exception("The file path you provided is not valid.");
-            }
-
-            if (isEjsTemplate)
-            {
-                // Validate if template in file path is an ejs file
-                if (Path.GetExtension(templatePath).ToLower() != ".ejs")
-                {
-                    throw new Exception("Input template should be a valid EJS file");
-                }
-
-                // Convert ejs file to an equivalent html
-                templatePath = await ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
-            }
-
-            // Modify html template with content data and generate pdf
-            string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
-            await ConvertHtmlToPdf(OsmoDocPdfConfig.WkhtmltopdfPath, modifiedHtmlFilePath, outputFilePath);
-
-            if (isEjsTemplate)
-            {
-                // If input template was an ejs file, then the template path contains path to html converted from ejs
-                if (File.Exists(templatePath) && Path.GetExtension(templatePath).ToLower() == ".html")
-                {
-                    // If template path contains path to converted html template then delete it
-                    File.Delete(templatePath);
-                }
-            }
+            throw new ArgumentNullException(nameof(metaDataList));
         }
-        catch (Exception)
+
+        if (string.IsNullOrWhiteSpace(templatePath))
         {
-            throw;
+            throw new ArgumentNullException(nameof(templatePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(outputFilePath))
+        {
+            throw new ArgumentNullException(nameof(outputFilePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(OsmoDocPdfConfig.WkhtmltopdfPath) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            throw new Exception("WkhtmltopdfPath is not set in OsmoDocPdfConfig.");
+        }
+
+        if (!File.Exists(templatePath))
+        {
+            throw new Exception("The file path you provided is not valid.");
+        }
+
+        if (isEjsTemplate)
+        {
+            // Validate if template in file path is an ejs file
+            if (Path.GetExtension(templatePath).ToLower() != ".ejs")
+            {
+                throw new Exception("Input template should be a valid EJS file");
+            }
+
+            // Convert ejs file to an equivalent html
+            templatePath = await ConvertEjsToHTML(templatePath, outputFilePath, serializedEjsDataJson);
+        }
+
+        // Modify html template with content data and generate pdf
+        string modifiedHtmlFilePath = ReplaceFileElementsWithMetaData(templatePath, metaDataList, outputFilePath);
+        await ConvertHtmlToPdf(OsmoDocPdfConfig.WkhtmltopdfPath, modifiedHtmlFilePath, outputFilePath);
+
+        if (isEjsTemplate)
+        {
+            // If input template was an ejs file, then the template path contains path to html converted from ejs
+            if (File.Exists(templatePath) && Path.GetExtension(templatePath).ToLower() == ".html")
+            {
+                // If template path contains path to converted html template then delete it
+                File.Delete(templatePath);
+            }
         }
     }
 

@@ -31,101 +31,94 @@ public static class WordDocumentGenerator
     /// <param name="outputFilePath">The file path to save the generated document.</param>
     public async static Task GenerateDocumentByTemplate(string templateFilePath, DocumentData documentData, string outputFilePath)
     {
-        try
+        if (string.IsNullOrWhiteSpace(templateFilePath))
         {
-            if (string.IsNullOrWhiteSpace(templateFilePath))
+            throw new ArgumentNullException(nameof(templateFilePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(outputFilePath))
+        {
+            throw new ArgumentNullException(nameof(outputFilePath));
+        }
+
+        List<ContentData> contentData = documentData.Placeholders;
+        List<TableData> tablesData = documentData.TablesData;
+
+        // Creating dictionaries for each type of placeholders
+        Dictionary<string, string> textPlaceholders = new Dictionary<string, string>();
+        Dictionary<string, string> tableContentPlaceholders = new Dictionary<string, string>();
+        Dictionary<string, string> imagePlaceholders = new Dictionary<string, string>();
+
+        foreach (ContentData content in contentData)
+        {
+            if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Text)
             {
-                throw new ArgumentNullException(nameof(templateFilePath));
+                string placeholder = "{" + content.Placeholder + "}";
+                textPlaceholders.TryAdd(placeholder, content.Content);
             }
-
-            if (string.IsNullOrWhiteSpace(outputFilePath))
+            else if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Image)
             {
-                throw new ArgumentNullException(nameof(outputFilePath));
+                string placeholder = content.Placeholder;
+                imagePlaceholders.TryAdd(placeholder, content.Content);
             }
-
-            List<ContentData> contentData = documentData.Placeholders;
-            List<TableData> tablesData = documentData.TablesData;
-
-            // Creating dictionaries for each type of placeholders
-            Dictionary<string, string> textPlaceholders = new Dictionary<string, string>();
-            Dictionary<string, string> tableContentPlaceholders = new Dictionary<string, string>();
-            Dictionary<string, string> imagePlaceholders = new Dictionary<string, string>();
-
-            foreach (ContentData content in contentData)
+            else if (content.ParentBody == ParentBody.Table && content.ContentType == ContentType.Text)
             {
-                if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Text)
-                {
-                    string placeholder = "{" + content.Placeholder + "}";
-                    textPlaceholders.TryAdd(placeholder, content.Content);
-                }
-                else if (content.ParentBody == ParentBody.None && content.ContentType == ContentType.Image)
-                {
-                    string placeholder = content.Placeholder;
-                    imagePlaceholders.TryAdd(placeholder, content.Content);
-                }
-                else if (content.ParentBody == ParentBody.Table && content.ContentType == ContentType.Text)
-                {
-                    string placeholder = "{" + content.Placeholder + "}";
-                    tableContentPlaceholders.TryAdd(placeholder, content.Content);
-                }
+                string placeholder = "{" + content.Placeholder + "}";
+                tableContentPlaceholders.TryAdd(placeholder, content.Content);
             }
+        }
 
-            // Create document of the template
-            XWPFDocument document = await GetXWPFDocument(templateFilePath);
+        // Create document of the template
+        XWPFDocument document = await GetXWPFDocument(templateFilePath);
 
-            // For each element in the document
-            foreach (IBodyElement element in document.BodyElements)
+        // For each element in the document
+        foreach (IBodyElement element in document.BodyElements)
+        {
+            if (element.ElementType == BodyElementType.PARAGRAPH)
             {
-                if (element.ElementType == BodyElementType.PARAGRAPH)
-                {
-                    // If element is a paragraph
-                    XWPFParagraph paragraph = (XWPFParagraph)element;
+                // If element is a paragraph
+                XWPFParagraph paragraph = (XWPFParagraph)element;
 
-                    // If the paragraph is empty string or the placeholder regex does not match then continue
-                    if (paragraph.ParagraphText == string.Empty || !new Regex(PlaceholderPattern).IsMatch(paragraph.ParagraphText))
+                // If the paragraph is empty string or the placeholder regex does not match then continue
+                if (paragraph.ParagraphText == string.Empty || !new Regex(PlaceholderPattern).IsMatch(paragraph.ParagraphText))
+                {
+                    continue;
+                }
+
+                // Replace placeholders in paragraph with values
+                paragraph = ReplacePlaceholdersOnBody(paragraph, textPlaceholders);
+            }
+            else if (element.ElementType == BodyElementType.TABLE)
+            {
+                // If element is a table
+                XWPFTable table = (XWPFTable)element;
+
+                // Replace placeholders in a table
+                table = ReplacePlaceholderOnTables(table, tableContentPlaceholders);
+
+                // Populate the table with data if it is passed in tablesData list
+                foreach (TableData insertData in tablesData)
+                {
+                    if (insertData.TablePos >= 1 && insertData.TablePos <= document.Tables.Count && table == document.Tables[insertData.TablePos - 1])
                     {
-                        continue;
-                    }
-
-                    // Replace placeholders in paragraph with values
-                    paragraph = ReplacePlaceholdersOnBody(paragraph, textPlaceholders);
-                }
-                else if (element.ElementType == BodyElementType.TABLE)
-                {
-                    // If element is a table
-                    XWPFTable table = (XWPFTable)element;
-
-                    // Replace placeholders in a table
-                    table = ReplacePlaceholderOnTables(table, tableContentPlaceholders);
-
-                    // Populate the table with data if it is passed in tablesData list
-                    foreach (TableData insertData in tablesData)
-                    {
-                        if (insertData.TablePos >= 1 && insertData.TablePos <= document.Tables.Count && table == document.Tables[insertData.TablePos - 1])
-                        {
-                            table = PopulateTable(table, insertData);
-                        }
+                        table = PopulateTable(table, insertData);
                     }
                 }
             }
-
-            // Write the document to output file path and close the document
-            WriteDocument(document, outputFilePath);
-            document.Close();
-
-            /*
-             * Image Replacement is done after writing the document here,
-             * because for Text Replacement, NPOI package is being used
-             * and for Image Replacement, OpeXML package is used.
-             * Since both the packages have different execution method, so they are handled separately
-             */
-            // Replace all the image placeholders in the output file
-            await ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        // Write the document to output file path and close the document
+        WriteDocument(document, outputFilePath);
+        document.Close();
+
+        /*
+            * Image Replacement is done after writing the document here,
+            * because for Text Replacement, NPOI package is being used
+            * and for Image Replacement, OpeXML package is used.
+            * Since both the packages have different execution method, so they are handled separately
+            */
+        // Replace all the image placeholders in the output file
+        await ReplaceImagePlaceholders(outputFilePath, outputFilePath, imagePlaceholders);
     }
 
     /// <summary>
