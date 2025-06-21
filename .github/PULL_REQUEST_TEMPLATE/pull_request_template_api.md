@@ -2,7 +2,7 @@
 
 ### Pre-requisites
 
-- [ ] I have gone through the Contributing guidelines for [Submitting a Pull Request (PR)](https://github.com/OsmosysSoftware/document-service/blob/main/CONTRIBUTING.md#submitting-a-pull-request-pr) and ensured that this is not a duplicate PR.
+- [ ] I have gone through the Contributing guidelines for [Submitting a Pull Request (PR)](https://github.com/OsmosysSoftware/osmodoc/blob/main/CONTRIBUTING.md#submitting-a-pull-request-pr) and ensured that this is not a duplicate PR.
 - [ ] I have performed unit testing for the new feature added or updated to ensure the new features added are working as expected.
 - [ ] I have performed preliminary testing to ensure that any existing features are not impacted and any new features are working as expected as a whole.
 - [ ] I have added/updated the `.env.example` file with the required values as applicable.
