@@ -9,12 +9,7 @@ public enum ContentType
     /// <summary>
     /// The placeholder represents text content.
     /// </summary>
-    Text = 0,
-
-    /// <summary>
-    /// The placeholder represents an image.
-    /// </summary>
-    Image = 1
+    Text = 0
 }
 
 /// <summary>

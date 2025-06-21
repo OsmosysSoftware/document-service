@@ -20,4 +20,9 @@ public class DocumentData
     /// </summary>
 
     public List<TableData> TablesData { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the list of images in the document.
+    /// </summary>
+    public List<ImageData> Images { get; set; } = new();
 }
