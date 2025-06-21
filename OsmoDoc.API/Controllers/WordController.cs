@@ -81,49 +81,12 @@ public class WordController : ControllerBase
 
             CommonMethodsHelper.CreateDirectoryIfNotExists(outputFilePath);
 
-            // Handle image placeholder data in request
-            foreach (WordContentDataRequestDTO placeholder in request.DocumentData.Placeholders)
-            {
-                if (placeholder.ContentType == ContentType.Image)
-                {
-                    if (string.IsNullOrWhiteSpace(placeholder.ImageExtension))
-                    {
-                        throw new BadHttpRequestException("Image extension is required for image content data");
-                    }
-
-                    if (string.IsNullOrWhiteSpace(placeholder.Content))
-                    {
-                        throw new BadHttpRequestException("Image content data is required");
-                    }
-
-                    // Remove '.' from image extension if present
-                    placeholder.ImageExtension = placeholder.ImageExtension.Replace(".", string.Empty);
-
-                    // Generate a random image file name and its path
-                    string imageFilePath = Path.Combine(
-                        this._hostingEnvironment.WebRootPath,
-                        tempPath,
-                        inputPath,
-                        wordPath,
-                        imagesPath,
-                        CommonMethodsHelper.GenerateRandomFileName(placeholder.ImageExtension)
-                    );
-
-                    CommonMethodsHelper.CreateDirectoryIfNotExists(imageFilePath);
-
-                    // Save image content base64 string to inputs directory
-                    await Base64StringHelper.SaveBase64StringToFilePath(placeholder.Content, imageFilePath, this._configuration);
-
-                    // Replace placeholder content with image file path
-                    placeholder.Content = imageFilePath;
-                }
-            }
-
             // Map document data in request to word library model class
             DocumentData documentData = new DocumentData
             {
                 Placeholders = this._mapper.Map<List<ContentData>>(request.DocumentData.Placeholders),
-                TablesData = request.DocumentData.TablesData
+                TablesData = request.DocumentData.TablesData,
+                Images = request.DocumentData.ImagesData
             };
 
             // Generate and save output docx in output directory

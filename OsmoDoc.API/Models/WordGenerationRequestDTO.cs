@@ -12,13 +12,9 @@ public class WordGenerationRequestDTO
     public WordDocumentDataRequestDTO DocumentData { get; set; } = new();
 }
 
-public class WordContentDataRequestDTO : ContentData
-{
-    public string? ImageExtension { get; set; }
-}
-
 public class WordDocumentDataRequestDTO
 {
-    public List<WordContentDataRequestDTO> Placeholders { get; set; } = new List<WordContentDataRequestDTO>();
+    public List<ContentData> Placeholders { get; set; } = new List<ContentData>();
     public List<TableData> TablesData { get; set; } = new List<TableData>();
+    public List<ImageData> ImagesData { get; set; } = new List<ImageData>();
 }

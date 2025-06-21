@@ -7,7 +7,6 @@ namespace OsmoDoc.API.Helpers;
 public class AutoMappingProfile : Profile
 {
     public AutoMappingProfile()
-    {
-        this.CreateMap<WordContentDataRequestDTO, ContentData>();
+    {        
     }
 }
